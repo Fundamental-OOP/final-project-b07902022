@@ -139,7 +139,6 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 			for (Tile tile : tiles)
 			{
 				if(tile.clicked && tile.black){
-					tile.changeColor = true;
 					g.setColor(Color.GRAY);
 					g.fillRect(tile.x, tile.y, TILE_WIDTH, TILE_HEIGHT);
 				}

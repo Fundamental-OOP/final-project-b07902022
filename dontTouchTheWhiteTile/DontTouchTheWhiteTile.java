@@ -40,6 +40,8 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 
 	public int combo = 0;
 
+	public MidiSound music = new MidiSound("./music/music.mid");
+
 	public DontTouchTheWhiteTile()
 	{
 		for (int i = 0; i < COLUMNS; i++) {
@@ -92,8 +94,17 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 
 		int speed = velocity[0];
 
-		if(timescnt > 200) speed = velocity[1];
-		if(timescnt > 400) speed = velocity[2];
+		if(timescnt > 200) {
+			speed = velocity[1];
+			music.ChangeSpeed(2.0F);
+		}
+		if(timescnt > 400) {
+			speed = velocity[2];
+			music.ChangeSpeed(4.0F);
+		}
+//		if(!music.CheckRunning()){
+//
+//		}
 
 		for(Tile tile : tiles){
 			//System.out.println("Origin: " + tile.x + ", " + tile.y);
@@ -167,6 +178,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 	public static void main(String[] args)
 	{
 		dttwt = new DontTouchTheWhiteTile();
+		dttwt.music.run();
 	}
 
 	@Override

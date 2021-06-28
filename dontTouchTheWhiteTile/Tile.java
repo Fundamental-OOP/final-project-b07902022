@@ -12,15 +12,12 @@ public class Tile
 
 	public boolean clicked;
 
-	public boolean changeColor;
-
 	public Tile(int x, int y, boolean black)
 	{
 		this.x = x;
 		this.y = y;
 		this.black = black;
 		this.clicked = false;
-		this.changeColor = false;
 	}
 
 	public boolean pointInTile(int x, int y)

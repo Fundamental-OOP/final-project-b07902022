@@ -7,19 +7,23 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
-import java.util.ArrayList;
-import java.util.Random;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.*;
 
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
-public class DontTouchTheWhiteTile implements ActionListener, MouseListener
+public class DontTouchTheWhiteTile implements ActionListener, MouseListener, KeyListener
 {
 
 	public final static int COLUMNS = 3, ROWS = 3, TILE_WIDTH = 150, TILE_HEIGHT = 200;
 
 	public final static int[] velocity = {40, 20, 10, 2};
 
+	public final static int[] keyCodeList = {83, 68, 70, 32, 74, 75, 76};
+	public Map<Integer, Integer> keyCodeToX = new HashMap<Integer, Integer>();
+	
 	public static DontTouchTheWhiteTile dttwt;
 
 	public ArrayList<Tile> tiles;
@@ -36,6 +40,9 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener
 
 	public DontTouchTheWhiteTile()
 	{
+		for (int i = 0; i < COLUMNS; i++) {
+			keyCodeToX.put(keyCodeList[i+2], (int) (TILE_WIDTH * (i+0.5)));
+		}
 		JFrame frame = new JFrame("Don't Touch The White Tile!");
 		Timer timer = new Timer(20, this);
 
@@ -47,6 +54,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		frame.addMouseListener(this);
+		frame.addKeyListener(this);
 		frame.setResizable(false);
 
 		start();
@@ -104,7 +112,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener
 		//System.out.println("-------------------------------cnt: " + cnt + "-------------------------------");
 
 		if(getNewTile){
-			System.out.println("Time : " + timescnt);
+			// System.out.println("Time : " + timescnt);
 			int blackTile = random.nextInt(COLUMNS);
 			for(int j = 0; j < COLUMNS; j++){
 				Tile newTile = new Tile(j * TILE_WIDTH, -TILE_HEIGHT, j == blackTile);
@@ -247,5 +255,43 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener
 	@Override
 	public void mouseExited(MouseEvent e)
 	{
+	}
+
+	@Override
+	public void keyTyped(KeyEvent e) {
+		// TODO Auto-generated method stub
+	}
+
+	@Override
+	public void keyPressed(KeyEvent e) {
+		// TODO Auto-generated method stub
+		int keyCode = e.getKeyCode();
+		// System.out.println(keyCode);
+		int x = keyCodeToX.get(keyCode);
+		int y = TILE_HEIGHT * (ROWS - 1);
+		// System.out.println("fuck1 " + x + " " + y);
+		if (!gameOver) {
+			for (int i = 0; i < tiles.size(); i++) {
+				Tile tile = tiles.get(i);
+				// System.out.println(tile.pointInTile(x, y));
+				if (tile.pointInTile(x, y) && !tile.clicked) {
+					// System.out.println("fuck2 " + tile.x + " " + tile.y + " " + tile.black);
+					if (tile.black) {
+						score += Math.max(100 - milSecDelay, 10);
+						System.out.println("You've scored " + Math.max(100 - milSecDelay, 10) + " points!");
+						milSecDelay = 0;
+						tile.clicked = true;
+					}
+					else gameOver = true;
+				}
+			}
+		}
+		else start();
+	}
+
+	@Override
+	public void keyReleased(KeyEvent e) {
+		// TODO Auto-generated method stub
+		
 	}
 }

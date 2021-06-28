@@ -16,7 +16,7 @@ import javax.swing.Timer;
 public class DontTouchTheWhiteTile implements ActionListener, MouseListener
 {
 
-	public final static int COLUMNS = 3, ROWS = 3, TILE_WIDTH = 250, TILE_HEIGHT = 300;
+	public final static int COLUMNS = 3, ROWS = 3, TILE_WIDTH = 150, TILE_HEIGHT = 200;
 
 	public static DontTouchTheWhiteTile dttwt;
 
@@ -30,10 +30,12 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener
 
 	public boolean gameOver;
 
+	public int timescnt = 0;
+
 	public DontTouchTheWhiteTile()
 	{
 		JFrame frame = new JFrame("Don't Touch The White Tile!");
-		Timer timer = new Timer(20, this);
+		Timer timer = new Timer(100, this);
 
 		renderer = new Renderer();
 		random = new Random();
@@ -58,7 +60,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener
 
 		for (int x = 0; x < COLUMNS; x++)
 		{
-			for (int y = 0; y < ROWS; y++)
+			for (int y = -1; y < ROWS; y++)
 			{
 				boolean canBeBlack = true;
 
@@ -72,11 +74,11 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener
 
 				if (!canBeBlack)
 				{
-					tiles.add(new Tile(x, y, false));
+					tiles.add(new Tile(x * TILE_WIDTH, y * TILE_HEIGHT, false));
 				}
 				else
 				{
-					tiles.add(new Tile(x, y, random.nextInt(2) == 0 || x == 2));
+					tiles.add(new Tile(x * TILE_WIDTH, y * TILE_HEIGHT, random.nextInt(COLUMNS - 1) == 0 || x == COLUMNS - 1));
 				}
 			}
 		}
@@ -86,14 +88,36 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener
 	public void actionPerformed(ActionEvent e)
 	{
 		renderer.repaint();
+		timescnt++;
+		boolean getNewTile = false;
+		int cnt = 0;
+
+		for(Tile tile : tiles){
+			//System.out.println("Origin: " + tile.x + ", " + tile.y);
+			tile.y = tile.y + TILE_HEIGHT / 10;
+			//System.out.println("After: " + tile.x + ", " + tile.y);
+		}
 
 		for (int i = 0; i < tiles.size(); i++)
 		{
 			Tile tile = tiles.get(i);
+			//tile.y += TILE_HEIGHT / 10;
+			if(tile.y == TILE_HEIGHT * ROWS){
+				tiles.remove(i);
+				getNewTile = true;
+				cnt++;
+			}
+		}
 
-			if (tile.animateY < 0)
-			{
-				tile.animateY += TILE_HEIGHT / 5;
+		//System.out.println("-------------------------------cnt: " + cnt + "-------------------------------");
+
+		if(getNewTile){
+			System.out.println("Time : " + timescnt);
+			int blackTile = random.nextInt(COLUMNS);
+			for(int j = 0; j < COLUMNS; j++){
+				boolean black = random.nextInt(COLUMNS - 1) == 0 || j == COLUMNS - 1;
+				Tile newTile = new Tile(j * TILE_WIDTH, -TILE_HEIGHT, j == blackTile);
+				tiles.add(newTile);
 			}
 		}
 
@@ -112,13 +136,15 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener
 			for (Tile tile : tiles)
 			{
 				g.setColor(tile.black ? Color.BLACK : Color.WHITE);
-				g.fillRect(tile.x * TILE_WIDTH, tile.y * TILE_HEIGHT + tile.animateY, TILE_WIDTH, TILE_HEIGHT);
+				g.fillRect(tile.x, tile.y, TILE_WIDTH, TILE_HEIGHT);
 				g.setColor(tile.black ? Color.WHITE : Color.BLACK);
-				g.drawRect(tile.x * TILE_WIDTH, tile.y * TILE_HEIGHT + tile.animateY, TILE_WIDTH, TILE_HEIGHT);
+				g.drawRect(tile.x, tile.y, TILE_WIDTH, TILE_HEIGHT);
 			}
 
 			g.setColor(Color.RED);
 			g.drawString(String.valueOf(score), TILE_WIDTH, 100);
+			g.setColor(Color.RED);
+			g.drawLine(0, TILE_HEIGHT * (ROWS - 1), TILE_WIDTH * COLUMNS, TILE_HEIGHT * (ROWS - 1));
 		}
 		else
 		{
@@ -141,7 +167,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener
 	@Override
 	public void mousePressed(MouseEvent e)
 	{
-		boolean clicked = false;
+		/*boolean clicked = false;
 
 		if (!gameOver)
 		{
@@ -212,7 +238,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener
 		else
 		{
 			start();
-		}
+		}*/
 	}
 
 	@Override

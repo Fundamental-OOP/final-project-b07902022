@@ -6,7 +6,7 @@ public class Tile
 
 	public int x, y;
 
-	public int animateY;
+	//public int animateY;
 
 	public boolean black;
 

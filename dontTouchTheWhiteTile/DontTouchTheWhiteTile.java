@@ -43,7 +43,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 	public DontTouchTheWhiteTile()
 	{
 		for (int i = 0; i < COLUMNS; i++) {
-			keyCodeToX.put(keyCodeList[i+2], (int) (TILE_WIDTH * (i+0.5)));
+			keyCodeToX.put(keyCodeList[i + (int) ((7 - COLUMNS) / 2) ], (int) (TILE_WIDTH * (i+0.5)));
 		}
 		JFrame frame = new JFrame("Don't Touch The White Tile!");
 		Timer timer = new Timer(20, this);

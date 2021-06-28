@@ -38,6 +38,8 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 
 	public int timescnt = 0;
 
+	public int combo = 0;
+
 	public DontTouchTheWhiteTile()
 	{
 		for (int i = 0; i < COLUMNS; i++) {
@@ -104,13 +106,14 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 			Tile tile = tiles.get(i);
 			//tile.y += TILE_HEIGHT / 10;
 			if(tile.y == TILE_HEIGHT * ROWS){
+				if (tile.black && !tile.clicked) combo = 0;
 				tiles.remove(i);
 				getNewTile = true;
 				cnt++;
 				i--;
 			}
 		}
-		System.out.println("-------------------------------cnt: " + cnt + "-------------------------------");
+		// System.out.println("-------------------------------cnt: " + cnt + "-------------------------------");
 
 		if(getNewTile){
 			// System.out.println("Time : " + timescnt);
@@ -141,6 +144,8 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 				g.drawRect(tile.x, tile.y, TILE_WIDTH, TILE_HEIGHT);
 			}
 
+			g.setColor(Color.BLUE);
+			g.drawString(String.valueOf(combo), 0, 100);
 			g.setColor(Color.RED);
 			g.drawString(String.valueOf(score), TILE_WIDTH, 100);
 			g.setColor(Color.RED);
@@ -285,8 +290,10 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 						System.out.println("You've scored " + Math.max(100 - milSecDelay, 10) + " points!");
 						milSecDelay = 0;
 						tile.clicked = true;
+						combo += 1;
+					} else {
+						combo = 0;
 					}
-					else gameOver = true;
 				}
 			}
 		}

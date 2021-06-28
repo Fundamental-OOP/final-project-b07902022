@@ -279,12 +279,6 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 				if (tile.pointInTile(x, y) && !tile.clicked) {
 					// System.out.println("fuck2 " + tile.x + " " + tile.y + " " + tile.black);
 					if (tile.black) {
-						score += Math.max(100 - milSecDelay, 10);
-						System.out.println("You've scored " + Math.max(100 - milSecDelay, 10) + " points!");
-						milSecDelay = 0;
-						tile.clicked = true;
-					}
-					else gameOver = true;
 						score += (100 + 10 * combo);
 						System.out.println("You've scored " + (100 + 10 * combo) + " points!");
 						milSecDelay = 0;
@@ -304,3 +298,4 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 		// TODO Auto-generated method stub
 		
 	}
+}

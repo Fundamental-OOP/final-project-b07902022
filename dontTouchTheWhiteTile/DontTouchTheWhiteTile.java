@@ -267,6 +267,9 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
 		int keyCode = e.getKeyCode();
+		if (!keyCodeToX.containsKey(keyCode)) {
+			return;
+		}
 		// System.out.println(keyCode);
 		int x = keyCodeToX.get(keyCode);
 		int y = TILE_HEIGHT * (ROWS - 1);

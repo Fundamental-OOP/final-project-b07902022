@@ -10,19 +10,25 @@ public class Tile
 
 	public boolean black;
 
+	public boolean clicked;
+
+	public boolean changeColor;
+
 	public Tile(int x, int y, boolean black)
 	{
 		this.x = x;
 		this.y = y;
 		this.black = black;
+		this.clicked = false;
+		this.changeColor = false;
 	}
 
 	public boolean pointInTile(int x, int y)
 	{
 		int width = DontTouchTheWhiteTile.TILE_WIDTH;
 		int height = DontTouchTheWhiteTile.TILE_HEIGHT;
-		
-		return x > this.x * width && x < this.x * width + width && y > this.y * height && y < this.y * height + height;
+		// System.out.println(x + " " + y + " " + this.x + " " + this.y);
+		return x > this.x && x < this.x + width && y > this.y && y < this.y + height;
 	}
 
 }

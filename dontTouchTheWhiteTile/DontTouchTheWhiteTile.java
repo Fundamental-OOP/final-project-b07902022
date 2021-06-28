@@ -18,6 +18,8 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener
 
 	public final static int COLUMNS = 3, ROWS = 3, TILE_WIDTH = 150, TILE_HEIGHT = 200;
 
+	public final static int[] velocity = {40, 20, 10, 2};
+
 	public static DontTouchTheWhiteTile dttwt;
 
 	public ArrayList<Tile> tiles;
@@ -35,7 +37,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener
 	public DontTouchTheWhiteTile()
 	{
 		JFrame frame = new JFrame("Don't Touch The White Tile!");
-		Timer timer = new Timer(100, this);
+		Timer timer = new Timer(20, this);
 
 		renderer = new Renderer();
 		random = new Random();
@@ -58,28 +60,14 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener
 		gameOver = false;
 		tiles = new ArrayList<Tile>();
 
-		for (int x = 0; x < COLUMNS; x++)
-		{
-			for (int y = -1; y < ROWS; y++)
-			{
-				boolean canBeBlack = true;
 
-				for (Tile tile : tiles)
-				{
-					if (tile.y == y && tile.black)
-					{
-						canBeBlack = false;
-					}
-				}
+		for(int y = -1; y < ROWS; y++){
 
-				if (!canBeBlack)
-				{
-					tiles.add(new Tile(x * TILE_WIDTH, y * TILE_HEIGHT, false));
-				}
-				else
-				{
-					tiles.add(new Tile(x * TILE_WIDTH, y * TILE_HEIGHT, random.nextInt(COLUMNS - 1) == 0 || x == COLUMNS - 1));
-				}
+			int blackTile = random.nextInt(COLUMNS);
+
+			for(int x = 0; x < ROWS; x++){
+				Tile newTile = new Tile(x * TILE_WIDTH, y * TILE_HEIGHT, x == blackTile);
+				tiles.add(newTile);
 			}
 		}
 	}
@@ -92,9 +80,14 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener
 		boolean getNewTile = false;
 		int cnt = 0;
 
+		int speed = velocity[0];
+
+		if(timescnt > 200) speed = velocity[1];
+		if(timescnt > 400) speed = velocity[2];
+
 		for(Tile tile : tiles){
 			//System.out.println("Origin: " + tile.x + ", " + tile.y);
-			tile.y = tile.y + TILE_HEIGHT / 10;
+			tile.y = tile.y + TILE_HEIGHT / speed;
 			//System.out.println("After: " + tile.x + ", " + tile.y);
 		}
 
@@ -104,18 +97,16 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener
 			//tile.y += TILE_HEIGHT / 10;
 			if(tile.y == TILE_HEIGHT * ROWS){
 				tiles.remove(i);
-				getNewTile = true;
 				cnt++;
+				i--;
 			}
 		}
-
 		//System.out.println("-------------------------------cnt: " + cnt + "-------------------------------");
 
 		if(getNewTile){
 			System.out.println("Time : " + timescnt);
 			int blackTile = random.nextInt(COLUMNS);
 			for(int j = 0; j < COLUMNS; j++){
-				boolean black = random.nextInt(COLUMNS - 1) == 0 || j == COLUMNS - 1;
 				Tile newTile = new Tile(j * TILE_WIDTH, -TILE_HEIGHT, j == blackTile);
 				tiles.add(newTile);
 			}

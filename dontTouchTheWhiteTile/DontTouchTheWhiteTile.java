@@ -97,11 +97,12 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener
 			//tile.y += TILE_HEIGHT / 10;
 			if(tile.y == TILE_HEIGHT * ROWS){
 				tiles.remove(i);
+				getNewTile = true;
 				cnt++;
 				i--;
 			}
 		}
-		//System.out.println("-------------------------------cnt: " + cnt + "-------------------------------");
+		System.out.println("-------------------------------cnt: " + cnt + "-------------------------------");
 
 		if(getNewTile){
 			System.out.println("Time : " + timescnt);

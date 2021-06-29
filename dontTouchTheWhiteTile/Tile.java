@@ -20,6 +20,8 @@ public abstract class Tile{
 		this.clicked = false;
 	}
 
+	public abstract void setClicked(boolean clicked);
+
 	public abstract boolean pointInTile(int x, int y);
 
 }

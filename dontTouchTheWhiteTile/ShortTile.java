@@ -6,6 +6,9 @@ public class ShortTile extends Tile {
         super(x, y, black, 1);
     }
 
+    public void setClicked(boolean clicked) {
+        this.clicked = clicked;
+    }
     @Override
     public boolean pointInTile(int x, int y)
     {

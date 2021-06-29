@@ -105,6 +105,9 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 		/*if(timescnt > 200) speed = velocity[1];
 		if(timescnt > 400) speed = velocity[2];*/
 
+		// int speed = velocity[0];
+
+
 //		if(timescnt > 200) {
 //			speed = velocity[1];
 //			music.ChangeSpeed(2.0F);
@@ -140,7 +143,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 
 		if(getNewTile){
 			// System.out.println("Time : " + timescnt);
-			boolean createLongTail = (random.nextInt(15) == 0);
+			boolean createLongTail = (random.nextInt(1) == 0);
 			if(!hasLongTile && createLongTail){
 				longTileColumn = random.nextInt(COLUMNS);
 				longTileRound = random.nextInt(3) + 5;
@@ -301,7 +304,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
-		/*int keyCode = e.getKeyCode();
+		int keyCode = e.getKeyCode();
 		if (!keyCodeToX.containsKey(keyCode)) {
 			return;
 		}
@@ -316,10 +319,11 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 				if (tile.pointInTile(x, y) && !tile.clicked) {
 					// System.out.println("fuck2 " + tile.x + " " + tile.y + " " + tile.black);
 					if (tile.black) {
+						if (tile.tileLength == 1) tile.setClicked(true);
 						score += (100 + 10 * combo);
 						System.out.println("You've scored " + (100 + 10 * combo) + " points!");
 						milSecDelay = 0;
-						tile.clicked = true;
+						// tile.clicked = true;
 						combo += 1;
 					} else {
 						combo = 0;
@@ -327,12 +331,33 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 				}
 			}
 		}
-		else start();*/
-		System.out.println("aaaa");
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
+		int keyCode = e.getKeyCode();
+		if (!keyCodeToX.containsKey(keyCode)) {
+			return;
+		}
+		// System.out.println(keyCode);
+		int x = keyCodeToX.get(keyCode);
+		int y = TILE_HEIGHT * (ROWS - 1);
+		// System.out.println("fuck1 " + x + " " + y);
+		if (!gameOver) {
+			for (int i = 0; i < tiles.size(); i++) {
+				Tile tile = tiles.get(i);
+				// System.out.println(tile.pointInTile(x, y));
+				if (tile.pointInTile(x, y) && !tile.clicked) {
+					// System.out.println("fuck2 " + tile.x + " " + tile.y + " " + tile.black);
+					if (tile.black) {
+						tile.setClicked(true);
+						milSecDelay = 0;
+					}
+				}
+			}
+		}
+		else start();
+		// System.out.println("________________");
 		// TODO Auto-generated method stub
 		System.out.println("bbbb");
 	}

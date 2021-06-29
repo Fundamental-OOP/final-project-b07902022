@@ -5,15 +5,12 @@ public class LongTile extends Tile {
 
     public boolean isOnCombo;
 
-    public int lastClickPos;
-
     public boolean hasBeenClick;
 
     public LongTile(int x, int y, int tileLength){
         super(x, y, true, tileLength);
         this.hasBeenClick = false;
         this.isOnCombo = false;
-        this.lastClickPos = tileLength * DontTouchTheWhiteTile.TILE_HEIGHT; //relative to up-left corner
     }
 
     public void setClicked(boolean clicked) {

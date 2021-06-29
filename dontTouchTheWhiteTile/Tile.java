@@ -11,6 +11,7 @@ public abstract class Tile{
 
 	public boolean clicked;
 	public boolean released;
+	public int lastClickPos;
 
 	public Tile(int x, int y, boolean black, int tileLength)
 	{
@@ -20,6 +21,7 @@ public abstract class Tile{
 		this.tileLength = tileLength;
 		this.clicked = false;
 		this.released = false;
+		this.lastClickPos = tileLength * DontTouchTheWhiteTile.TILE_HEIGHT; //relative to up-left corner
 	}
 
 	public abstract void setClicked(boolean clicked);

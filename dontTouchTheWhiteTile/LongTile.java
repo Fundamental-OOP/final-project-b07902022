@@ -13,7 +13,7 @@ public class LongTile extends Tile {
         super(x, y, true, tileLength);
         this.hasBeenClick = false;
         this.isOnCombo = false;
-        this.lastClickPos = -1; //relative to up-left corner
+        this.lastClickPos = tileLength * DontTouchTheWhiteTile.TILE_HEIGHT; //relative to up-left corner
     }
 
     public void setClicked(boolean clicked) {

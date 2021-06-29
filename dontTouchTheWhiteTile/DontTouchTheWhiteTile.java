@@ -175,15 +175,33 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 		{
 			for (Tile tile : tiles)
 			{
-				if(tile.clicked && tile.black){
-					g.setColor(Color.GRAY);
-					g.fillRect(tile.x, tile.y, TILE_WIDTH, TILE_HEIGHT);
+				if(tile.tileLength == 1){
+					if(tile.clicked && tile.black){
+						g.setColor(Color.GRAY);
+						g.fillRect(tile.x, tile.y, TILE_WIDTH, TILE_HEIGHT);
+					}
+					else{
+						g.setColor(tile.black ? Color.BLACK : Color.WHITE);
+						g.fillRect(tile.x, tile.y, TILE_WIDTH, tile.tileLength * TILE_HEIGHT);
+						g.setColor(tile.black ? Color.WHITE : Color.BLACK);
+						g.drawRect(tile.x, tile.y, TILE_WIDTH, tile.tileLength * TILE_HEIGHT);
+					}
 				}
 				else{
-					g.setColor(tile.black ? Color.BLACK : Color.WHITE);
-					g.fillRect(tile.x, tile.y, TILE_WIDTH, tile.tileLength * TILE_HEIGHT);
-					g.setColor(tile.black ? Color.WHITE : Color.BLACK);
-					g.drawRect(tile.x, tile.y, TILE_WIDTH, tile.tileLength * TILE_HEIGHT);
+					if(!tile.clicked){
+						LongTile thisTile = (LongTile)tile;
+						g.setColor(Color.GRAY);
+						//System.out.println("Gray length " + (tile.tileLength * TILE_HEIGHT - thisTile.lastClickPos));
+						g.fillRect(thisTile.x, thisTile.y + thisTile.lastClickPos, TILE_WIDTH, tile.tileLength * TILE_HEIGHT - thisTile.lastClickPos);
+						g.setColor(Color.BLACK);
+						g.fillRect(thisTile.x, thisTile.y, TILE_WIDTH, thisTile.lastClickPos);
+					}
+					else{
+						g.setColor(tile.black ? Color.BLACK : Color.WHITE);
+						g.fillRect(tile.x, tile.y, TILE_WIDTH, tile.tileLength * TILE_HEIGHT);
+						g.setColor(tile.black ? Color.WHITE : Color.BLACK);
+						g.drawRect(tile.x, tile.y, TILE_WIDTH, tile.tileLength * TILE_HEIGHT);
+					}
 				}
 			}
 
@@ -331,6 +349,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 				}
 			}
 		}
+		System.out.println("aaaa");
 	}
 
 	@Override

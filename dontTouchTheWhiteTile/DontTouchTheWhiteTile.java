@@ -46,13 +46,15 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 
 	public int combo = 0;
 
+	public MidiSound music = new MidiSound("./music/music.mid");
+
 	public DontTouchTheWhiteTile()
 	{
 		for (int i = 0; i < COLUMNS; i++) {
-			keyCodeToX.put(keyCodeList[i+2], (int) (TILE_WIDTH * (i+0.5)));
+			keyCodeToX.put(keyCodeList[i + (int) ((7 - COLUMNS) / 2) ], (int) (TILE_WIDTH * (i+0.5)));
 		}
 		JFrame frame = new JFrame("Don't Touch The White Tile!");
-		Timer timer = new Timer(20, this);
+		Timer timer = new Timer(28, this);
 
 		renderer = new Renderer();
 		random = new Random();
@@ -99,8 +101,22 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 		boolean getNewTile = false;
 		int cnt = 0;
 
+
 		/*if(timescnt > 200) speed = velocity[1];
 		if(timescnt > 400) speed = velocity[2];*/
+		int speed = velocity[0];
+
+//		if(timescnt > 200) {
+//			speed = velocity[1];
+//			music.ChangeSpeed(2.0F);
+//		}
+//		if(timescnt > 400) {
+//			speed = velocity[2];
+//			music.ChangeSpeed(4.0F);
+//		}
+//		if(!music.CheckRunning()){
+//
+//		}
 
 		for(Tile tile : tiles){
 			tile.y = tile.y + TILE_HEIGHT / speed;
@@ -188,6 +204,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 	public static void main(String[] args)
 	{
 		dttwt = new DontTouchTheWhiteTile();
+		dttwt.music.run();
 	}
 
 	@Override

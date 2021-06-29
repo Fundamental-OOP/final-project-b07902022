@@ -48,7 +48,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 			keyCodeToX.put(keyCodeList[i + (int) ((7 - COLUMNS) / 2) ], (int) (TILE_WIDTH * (i+0.5)));
 		}
 		JFrame frame = new JFrame("Don't Touch The White Tile!");
-		Timer timer = new Timer(20, this);
+		Timer timer = new Timer(28, this);
 
 		renderer = new Renderer();
 		random = new Random();
@@ -94,14 +94,14 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 
 		int speed = velocity[0];
 
-		if(timescnt > 200) {
-			speed = velocity[1];
-			music.ChangeSpeed(2.0F);
-		}
-		if(timescnt > 400) {
-			speed = velocity[2];
-			music.ChangeSpeed(4.0F);
-		}
+//		if(timescnt > 200) {
+//			speed = velocity[1];
+//			music.ChangeSpeed(2.0F);
+//		}
+//		if(timescnt > 400) {
+//			speed = velocity[2];
+//			music.ChangeSpeed(4.0F);
+//		}
 //		if(!music.CheckRunning()){
 //
 //		}

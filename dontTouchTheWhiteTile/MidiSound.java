@@ -18,6 +18,7 @@ public class MidiSound {
             midiPlayer.open();
             midiPlayer.setSequence(song);
             midiPlayer.setLoopCount(0); // repeat 0 times (play once)
+            midiPlayer.setTempoInBPM(90);
             midiPlayer.start();
             System.out.println(midiPlayer.getTempoInMPQ());
         } catch (MidiUnavailableException | InvalidMidiDataException | IOException e) {

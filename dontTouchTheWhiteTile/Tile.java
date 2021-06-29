@@ -1,10 +1,9 @@
 package dontTouchTheWhiteTile;
 
 
-public class Tile
-{
+public abstract class Tile{
 
-	public int x, y;
+	public int x, y, tileLength;
 
 	//public int animateY;
 
@@ -12,20 +11,15 @@ public class Tile
 
 	public boolean clicked;
 
-	public Tile(int x, int y, boolean black)
+	public Tile(int x, int y, boolean black, int tileLength)
 	{
 		this.x = x;
 		this.y = y;
 		this.black = black;
+		this.tileLength = tileLength;
 		this.clicked = false;
 	}
 
-	public boolean pointInTile(int x, int y)
-	{
-		int width = DontTouchTheWhiteTile.TILE_WIDTH;
-		int height = DontTouchTheWhiteTile.TILE_HEIGHT;
-		// System.out.println(x + " " + y + " " + this.x + " " + this.y);
-		return x > this.x && x < this.x + width && y > this.y && y < this.y + height;
-	}
+	public abstract boolean pointInTile(int x, int y);
 
 }

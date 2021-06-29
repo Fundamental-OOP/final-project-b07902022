@@ -36,6 +36,12 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 
 	public boolean gameOver;
 
+	public boolean hasLongTile = false;
+
+	public int longTileColumn = -1;
+
+	public int longTileRound = 0;
+
 	public int timescnt = 0;
 
 	public int combo = 0;
@@ -76,7 +82,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 			int blackTile = random.nextInt(COLUMNS);
 
 			for(int x = 0; x < ROWS; x++){
-				Tile newTile = new Tile(x * TILE_WIDTH, y * TILE_HEIGHT, x == blackTile);
+				ShortTile newTile = new ShortTile(x * TILE_WIDTH, y * TILE_HEIGHT, x == blackTile);
 				tiles.add(newTile);
 			}
 		}
@@ -87,18 +93,17 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 	{
 		renderer.repaint();
 		timescnt++;
+		int speed = velocity[1];
+		if(longTileRound > 0) longTileRound = longTileRound - TILE_HEIGHT / speed;
+		if(longTileRound == 0) longTileColumn = -1;
 		boolean getNewTile = false;
 		int cnt = 0;
 
-		int speed = velocity[0];
-
-		if(timescnt > 200) speed = velocity[1];
-		if(timescnt > 400) speed = velocity[2];
+		/*if(timescnt > 200) speed = velocity[1];
+		if(timescnt > 400) speed = velocity[2];*/
 
 		for(Tile tile : tiles){
-			//System.out.println("Origin: " + tile.x + ", " + tile.y);
 			tile.y = tile.y + TILE_HEIGHT / speed;
-			//System.out.println("After: " + tile.x + ", " + tile.y);
 		}
 
 		for (int i = 0; i < tiles.size(); i++)
@@ -106,7 +111,10 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 			Tile tile = tiles.get(i);
 			//tile.y += TILE_HEIGHT / 10;
 			if(tile.y == TILE_HEIGHT * ROWS){
-				if (tile.black && !tile.clicked) combo = 0;
+				if (tile.tileLength == 1 && tile.black && !tile.clicked) combo = 0;
+				if (tile.tileLength > 1){
+					hasLongTile = false;
+				}
 				tiles.remove(i);
 				getNewTile = true;
 				cnt++;
@@ -117,9 +125,20 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 
 		if(getNewTile){
 			// System.out.println("Time : " + timescnt);
+			boolean createLongTail = (random.nextInt(15) == 0);
+			if(!hasLongTile && createLongTail){
+				longTileColumn = random.nextInt(COLUMNS);
+				longTileRound = random.nextInt(3) + 5;
+				LongTile newTile = new LongTile(longTileColumn * TILE_WIDTH, -longTileRound * TILE_HEIGHT, longTileRound);
+				longTileRound = longTileRound * TILE_HEIGHT;
+				tiles.add(newTile);
+				hasLongTile = true;
+				System.out.println("long");
+			}
 			int blackTile = random.nextInt(COLUMNS);
 			for(int j = 0; j < COLUMNS; j++){
-				Tile newTile = new Tile(j * TILE_WIDTH, -TILE_HEIGHT, j == blackTile);
+				if(j == longTileColumn) continue;
+				ShortTile newTile = new ShortTile(j * TILE_WIDTH, -TILE_HEIGHT, j == blackTile);
 				tiles.add(newTile);
 			}
 		}
@@ -144,15 +163,17 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 				}
 				else{
 					g.setColor(tile.black ? Color.BLACK : Color.WHITE);
-					g.fillRect(tile.x, tile.y, TILE_WIDTH, TILE_HEIGHT);
+					g.fillRect(tile.x, tile.y, TILE_WIDTH, tile.tileLength * TILE_HEIGHT);
 					g.setColor(tile.black ? Color.WHITE : Color.BLACK);
-					g.drawRect(tile.x, tile.y, TILE_WIDTH, TILE_HEIGHT);
+					g.drawRect(tile.x, tile.y, TILE_WIDTH, tile.tileLength * TILE_HEIGHT);
 				}
 			}
 
 			g.setColor(Color.BLUE);
+			g.setFont(new Font(String.valueOf(combo), Font.BOLD, 50));
 			g.drawString(String.valueOf(combo), 0, 100);
 			g.setColor(Color.RED);
+			g.setFont(new Font(String.valueOf(score), Font.BOLD, 100));
 			g.drawString(String.valueOf(score), TILE_WIDTH, 100);
 			g.setColor(Color.RED);
 			g.drawLine(0, TILE_HEIGHT * (ROWS - 1), TILE_WIDTH * COLUMNS, TILE_HEIGHT * (ROWS - 1));
@@ -264,7 +285,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 	@Override
 	public void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
-		int keyCode = e.getKeyCode();
+		/*int keyCode = e.getKeyCode();
 		if (!keyCodeToX.containsKey(keyCode)) {
 			return;
 		}
@@ -290,7 +311,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 				}
 			}
 		}
-		else start();
+		else start();*/
 	}
 
 	@Override

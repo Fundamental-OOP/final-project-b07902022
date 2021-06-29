@@ -122,6 +122,11 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 
 		for(Tile tile : tiles){
 			tile.y = tile.y + TILE_HEIGHT / speed;
+			if(tile.tileLength > 1){
+				if(tile.clicked && !tile.released){
+					tile.lastClickPos = tile.lastClickPos - TILE_HEIGHT / speed;
+				}
+			}
 		}
 
 		for (int i = 0; i < tiles.size(); i++)

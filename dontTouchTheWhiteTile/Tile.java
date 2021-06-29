@@ -10,6 +10,7 @@ public abstract class Tile{
 	public boolean black;
 
 	public boolean clicked;
+	public boolean released;
 
 	public Tile(int x, int y, boolean black, int tileLength)
 	{
@@ -18,6 +19,7 @@ public abstract class Tile{
 		this.black = black;
 		this.tileLength = tileLength;
 		this.clicked = false;
+		this.released = false;
 	}
 
 	public abstract void setClicked(boolean clicked);

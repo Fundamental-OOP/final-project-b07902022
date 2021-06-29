@@ -16,6 +16,12 @@ public class LongTile extends Tile {
         this.lastClickPos = -1; //relative to up-left corner
     }
 
+    public void setClicked(boolean clicked) {
+        this.clicked = clicked;
+    }
+
+
+
     @Override
     public boolean pointInTile(int x, int y)
     {

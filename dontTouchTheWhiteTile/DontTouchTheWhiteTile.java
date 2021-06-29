@@ -104,7 +104,6 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 
 		/*if(timescnt > 200) speed = velocity[1];
 		if(timescnt > 400) speed = velocity[2];*/
-		int speed = velocity[0];
 
 //		if(timescnt > 200) {
 //			speed = velocity[1];
@@ -146,7 +145,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 				longTileColumn = random.nextInt(COLUMNS);
 				longTileRound = random.nextInt(3) + 5;
 				LongTile newTile = new LongTile(longTileColumn * TILE_WIDTH, -longTileRound * TILE_HEIGHT, longTileRound);
-				longTileRound = longTileRound * TILE_HEIGHT;
+				longTileRound = (longTileRound + 1) * TILE_HEIGHT;
 				tiles.add(newTile);
 				hasLongTile = true;
 				System.out.println("long");
@@ -329,11 +328,12 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 			}
 		}
 		else start();*/
+		System.out.println("aaaa");
 	}
 
 	@Override
 	public void keyReleased(KeyEvent e) {
 		// TODO Auto-generated method stub
-		
+		System.out.println("bbbb");
 	}
 }

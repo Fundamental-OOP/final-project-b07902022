@@ -1,8 +1,6 @@
 package dontTouchTheWhiteTile;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseEvent;
@@ -47,6 +45,8 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 	public int combo = 0;
 
 	public MidiSound music = new MidiSound("./music/music.mid");
+
+	public Set<Integer> pressedKeys = new HashSet<>();
 
 	public DontTouchTheWhiteTile()
 	{
@@ -165,6 +165,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 				tiles.add(newTile);
 			}
 		}
+		KeepTrackTheKeyboard();
 
 		milSecDelay++;
 	}
@@ -325,31 +326,55 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 	}
 
 	@Override
-	public void keyPressed(KeyEvent e) {
+	public synchronized void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
+
+		pressedKeys.add(e.getKeyCode());
 		int keyCode = e.getKeyCode();
+
+		System.out.println(pressedKeys.size());
 		if (!keyCodeToX.containsKey(keyCode)) {
 			return;
 		}
 		// System.out.println(keyCode);
-		int x = keyCodeToX.get(keyCode);
-		int y = TILE_HEIGHT * (ROWS - 1);
+//		int x = keyCodeToX.get(keyCode);
+//		int y = TILE_HEIGHT * (ROWS - 1);
 		// System.out.println("fuck1 " + x + " " + y);
-		if (!gameOver) {
-			for (int i = 0; i < tiles.size(); i++) {
-				Tile tile = tiles.get(i);
-				// System.out.println(tile.pointInTile(x, y));
-				if (tile.pointInTile(x, y) && !tile.clicked) {
-					// System.out.println("fuck2 " + tile.x + " " + tile.y + " " + tile.black);
-					if (tile.black) {
-						if (tile.tileLength == 1) tile.setClicked(true);
-						score += (100 + 10 * combo);
-						System.out.println("You've scored " + (100 + 10 * combo) + " points!");
-						milSecDelay = 0;
-						// tile.clicked = true;
-						combo += 1;
-					} else {
-						combo = 0;
+		for (Iterator<Integer> it = pressedKeys.iterator(); it.hasNext();) {
+			System.out.print(it.next() + " ");
+		}
+		System.out.println();
+		Point offset = new Point();
+		if (!pressedKeys.isEmpty()) {
+			for (Iterator<Integer> it = pressedKeys.iterator(); it.hasNext();) {
+				int a = it.next();
+
+				if (!keyCodeToX.containsKey(a)) {
+					continue;
+				}
+				int x = keyCodeToX.get(a);
+				int y = TILE_HEIGHT * (ROWS - 1);
+				if (!gameOver) {
+					for (int i = 0; i < tiles.size(); i++) {
+						Tile tile = tiles.get(i);
+						// System.out.println(tile.pointInTile(x, y));
+						if (tile.pointInTile(x, y) && !tile.clicked) {
+							// System.out.println("fuck2 " + tile.x + " " + tile.y + " " + tile.black);
+							if (tile.black) {
+								if (tile.tileLength == 1) {
+									tile.setClicked(true);
+									pressedKeys.remove(e.getKeyCode());
+								}
+								score += (100 + 10 * combo);
+								System.out.println("You've scored " + (100 + 10 * combo) + " points!");
+								milSecDelay = 0;
+								// tile.clicked = true;
+								combo += 1;
+							} else {
+								combo = 0;
+							}
+
+						}
 					}
 				}
 			}
@@ -358,11 +383,13 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 	}
 
 	@Override
-	public void keyReleased(KeyEvent e) {
+	public synchronized void keyReleased(KeyEvent e) {
+		pressedKeys.remove(e.getKeyCode());
 		int keyCode = e.getKeyCode();
 		if (!keyCodeToX.containsKey(keyCode)) {
 			return;
 		}
+
 		// System.out.println(keyCode);
 		int x = keyCodeToX.get(keyCode);
 		int y = TILE_HEIGHT * (ROWS - 1);
@@ -384,5 +411,38 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 		// System.out.println("________________");
 		// TODO Auto-generated method stub
 		System.out.println("bbbb");
+	}
+	public void KeepTrackTheKeyboard(){
+		if (!pressedKeys.isEmpty()) {
+			for (Iterator<Integer> it = pressedKeys.iterator(); it.hasNext();) {
+				int a = it.next();
+
+				if (!keyCodeToX.containsKey(a)) {
+					continue;
+				}
+				int x = keyCodeToX.get(a);
+				int y = TILE_HEIGHT * (ROWS - 1);
+				if (!gameOver) {
+					for (int i = 0; i < tiles.size(); i++) {
+						Tile tile = tiles.get(i);
+						// System.out.println(tile.pointInTile(x, y));
+						if (tile.pointInTile(x, y) && !tile.clicked) {
+							// System.out.println("fuck2 " + tile.x + " " + tile.y + " " + tile.black);
+							if (tile.black) {
+								if (tile.tileLength == 1) tile.setClicked(true);
+								score += (100 + 10 * combo);
+								System.out.println("You've scored " + (100 + 10 * combo) + " points!");
+								milSecDelay = 0;
+								// tile.clicked = true;
+								combo += 1;
+							} else {
+								it.remove();
+								combo = 0;
+							}
+						}
+					}
+				}
+			}
+		}
 	}
 }

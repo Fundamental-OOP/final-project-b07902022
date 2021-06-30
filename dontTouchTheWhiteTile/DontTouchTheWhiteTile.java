@@ -15,7 +15,7 @@ import javax.swing.Timer;
 public class DontTouchTheWhiteTile implements ActionListener, MouseListener, KeyListener
 {
 
-	public final static int ROWS = 3, TILE_WIDTH = 330, TILE_HEIGHT = 300;
+	public final static int ROWS = 3, TILE_WIDTH = 250, TILE_HEIGHT = 300;
 
 	public int COLUMNS = 3;
 
@@ -80,7 +80,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 		renderer = new Renderer();
 		random = new Random();
 
-		frame.setSize(TILE_WIDTH * COLUMNS, TILE_HEIGHT * ROWS);
+		frame.setSize(TILE_WIDTH * COLUMNS + 350, TILE_HEIGHT * ROWS);
 		frame.add(renderer);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -97,6 +97,8 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 	{
 		score = 0;
 		gameOver = false;
+		timescnt = 0;
+		countStart = 3;
 		tiles = new ArrayList<Tile>();
 
 
@@ -240,11 +242,21 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 
 			g.setColor(Color.BLUE);
 			g.setFont(new Font(String.valueOf(combo), Font.BOLD, 50));
-			g.drawString(String.valueOf(combo), 0, 100);
+			g.drawString("Combo" , COLUMNS * TILE_WIDTH + 80, 100);
+			g.drawString(String.valueOf(combo), COLUMNS * TILE_WIDTH + 155, 160);
 			g.setColor(Color.RED);
-			int fontSize = 100;
-			g.setFont(new Font(String.valueOf(score), Font.BOLD, fontSize));
-			g.drawString(String.valueOf(score), TILE_WIDTH, 100);
+			int score_shift = 0;
+			int cnt = Math.abs(score);
+			while(cnt / 10 > 0){
+				cnt = cnt / 10;
+				score_shift++;
+			}
+			if(score < 0) score_shift = score_shift + 1;
+			System.out.println("shift:" + score_shift);
+
+			g.setFont(new Font(String.valueOf(score), Font.BOLD, 50));
+			g.drawString("Score", COLUMNS * TILE_WIDTH + 100, 250);
+			g.drawString(String.valueOf(score), COLUMNS * TILE_WIDTH + 155 - 16 * score_shift, 310);
 			g.setColor(Color.RED);
 			g.drawLine(0, TILE_HEIGHT * (ROWS - 1), TILE_WIDTH * COLUMNS, TILE_HEIGHT * (ROWS - 1));
 		}
@@ -258,8 +270,8 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 	public static void main(String[] args)
 	{
 		ComponentInWindow win = new ComponentInWindow();
-        win.setBounds(100, 100, 320, 310);
-        win.setTitle("ss");
+        win.setBounds(100, 100, 370, 400);
+        win.setTitle("Set up before game!");
 		// dttwt = new DontTouchTheWhiteTile();
 		// dttwt.music.run();
 	}
@@ -379,7 +391,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 									milSecDelay = 0;
 								}
 							} else {
-								score -= 100;
+								score -= 200;
 								it.remove();
 								combo = 0;
 							}

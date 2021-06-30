@@ -9,6 +9,10 @@ public class ShortTile extends Tile {
     public void setClicked(boolean clicked) {
         this.clicked = clicked;
     }
+
+    public void setReleased(boolean released) {
+        this.released = released;
+    }
     @Override
     public boolean pointInTile(int x, int y)
     {

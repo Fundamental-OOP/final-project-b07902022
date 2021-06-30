@@ -17,6 +17,10 @@ public class LongTile extends Tile {
         this.clicked = clicked;
     }
 
+    public void setReleased(boolean released) {
+        this.released = released;
+    }
+
 
 
     @Override

@@ -123,7 +123,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 		for(Tile tile : tiles){
 			tile.y = tile.y + TILE_HEIGHT / speed;
 			if(tile.tileLength > 1){
-				if(tile.clicked && !tile.released){
+				if(tile.clicked && !tile.released && tile.lastClickPos > 0){
 					tile.lastClickPos = tile.lastClickPos - TILE_HEIGHT / speed;
 				}
 			}
@@ -244,65 +244,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 	@Override
 	public void mousePressed(MouseEvent e)
 	{
-		/*boolean clicked = false;
-		if (!gameOver)
-		{
-			for (int i = 0; i < tiles.size(); i++)
-			{
-				Tile tile = tiles.get(i);
-				if (tile.pointInTile(e.getX(), e.getY()) && !clicked)
-				{
-					if (e.getY() > TILE_HEIGHT * (ROWS - 1))
-					{
-						if (tile.black)
-						{
-							for (int j = 0; j < tiles.size(); j++)
-							{
-								if (tiles.get(j).y == ROWS)
-								{
-									tiles.remove(j);
-								}
-								tiles.get(j).y++;
-								tiles.get(j).animateY -= TILE_HEIGHT;
-							}
-							score += Math.max(100 - milSecDelay, 10);
-							System.out.println("You've scored " + Math.max(100 - milSecDelay, 10) + " points!");
-							milSecDelay = 0;
-							boolean canBeBlack = true;
-							for (int x = 0; x < COLUMNS; x++)
-							{
-								boolean black = random.nextInt(2) == 0 || x == COLUMNS - 1;
-								Tile newTile = null;
-								if (canBeBlack && black)
-								{
-									newTile = new Tile(x, 0, true);
-									canBeBlack = false;
-								}
-								else
-								{
-									newTile = new Tile(x, 0, false);
-								}
-								newTile.animateY -= TILE_HEIGHT;
-								tiles.add(newTile);
-							}
-						}
-						else
-						{
-							gameOver = true;
-						}
-						clicked = true;
-					}
-					else
-					{
-						gameOver = true;
-					}
-				}
-			}
-		}
-		else
-		{
-			start();
-		}*/
+
 	}
 
 	@Override
@@ -330,7 +272,6 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 	@Override
 	public synchronized void keyPressed(KeyEvent e) {
 		// TODO Auto-generated method stub
-
 		pressedKeys.add(e.getKeyCode());
 		int keyCode = e.getKeyCode();
 
@@ -338,49 +279,6 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 		if (!keyCodeToX.containsKey(keyCode)) {
 			return;
 		}
-		// System.out.println(keyCode);
-//		int x = keyCodeToX.get(keyCode);
-//		int y = TILE_HEIGHT * (ROWS - 1);
-		// System.out.println("fuck1 " + x + " " + y);
-//		for (Iterator<Integer> it = pressedKeys.iterator(); it.hasNext();) {
-//			System.out.print(it.next() + " ");
-//		}
-//		System.out.println();
-//		Point offset = new Point();
-//		if (!pressedKeys.isEmpty()) {
-//			for (Iterator<Integer> it = pressedKeys.iterator(); it.hasNext();) {
-//				int a = it.next();
-//
-//				if (!keyCodeToX.containsKey(a)) {
-//					continue;
-//				}
-//				int x = keyCodeToX.get(a);
-//				int y = TILE_HEIGHT * (ROWS - 1);
-//				if (!gameOver) {
-//					for (int i = 0; i < tiles.size(); i++) {
-//						Tile tile = tiles.get(i);
-//						// System.out.println(tile.pointInTile(x, y));
-//						if (tile.pointInTile(x, y) && !tile.clicked) {
-//							// System.out.println("fuck2 " + tile.x + " " + tile.y + " " + tile.black);
-//							if (tile.black) {
-//								if (tile.tileLength == 1) {
-//									tile.setClicked(true);
-//									pressedKeys.remove(e.getKeyCode());
-//								}
-//								score += (100 + 10 * combo);
-//								System.out.println("You've scored " + (100 + 10 * combo) + " points!");
-//								milSecDelay = 0;
-//								// tile.clicked = true;
-//								combo += 1;
-//							} else {
-//								combo = 0;
-//							}
-//
-//						}
-//					}
-//				}
-//			}
-//		}
 		System.out.println("aaaa");
 	}
 
@@ -400,10 +298,10 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 			for (int i = 0; i < tiles.size(); i++) {
 				Tile tile = tiles.get(i);
 				// System.out.println(tile.pointInTile(x, y));
-				if (tile.pointInTile(x, y) && !tile.clicked) {
+				if (tile.pointInTile(x, y) && !tile.released) {
 					// System.out.println("fuck2 " + tile.x + " " + tile.y + " " + tile.black);
 					if (tile.black) {
-						tile.setClicked(true);
+						tile.setReleased(true);
 						milSecDelay = 0;
 						combo += 1;
 					}
@@ -429,11 +327,12 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 					for (int i = 0; i < tiles.size(); i++) {
 						Tile tile = tiles.get(i);
 						// System.out.println(tile.pointInTile(x, y));
-						if (tile.pointInTile(x, y) && !tile.clicked) {
+						if (tile.pointInTile(x, y) && !tile.released) {
 							// System.out.println("fuck2 " + tile.x + " " + tile.y + " " + tile.black);
 							if (tile.black) {
 								if (tile.tileLength == 1) {
 									tile.setClicked(true);
+									tile.setReleased(true);
 									it.remove();
 									score += (100 + 10 * combo);
 									System.out.println("You've scored " + (100 + 10 * combo) + " points!");
@@ -441,6 +340,10 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 									// tile.clicked = true;
 									combo += 1;
 								} else {
+									if(!tile.clicked){
+										tile.setClicked(true);
+										tile.lastClickPos = y - tile.y;
+									}
 									score += (10 + 10 * combo);
 									System.out.println("You've scored " + (10 + 10 * combo) + " points!");
 									milSecDelay = 0;

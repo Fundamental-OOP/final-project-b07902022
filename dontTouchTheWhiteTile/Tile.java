@@ -26,6 +26,8 @@ public abstract class Tile{
 
 	public abstract void setClicked(boolean clicked);
 
+	public abstract void setReleased(boolean released);
+
 	public abstract boolean pointInTile(int x, int y);
 
 }

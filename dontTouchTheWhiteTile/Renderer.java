@@ -13,9 +13,9 @@ public class Renderer extends JPanel
 	{
 		super.paintComponent(g);
 
-		if (DontTouchTheWhiteTile.dttwt != null)
+		if (ComponentInWindow.dttwt != null)
 		{
-			DontTouchTheWhiteTile.dttwt.render(g);
+			ComponentInWindow.dttwt.render(g);
 		}
 	}
 	

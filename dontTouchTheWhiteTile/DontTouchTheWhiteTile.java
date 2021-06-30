@@ -15,9 +15,11 @@ import javax.swing.Timer;
 public class DontTouchTheWhiteTile implements ActionListener, MouseListener, KeyListener
 {
 
-	public final static int COLUMNS = 3, ROWS = 3, TILE_WIDTH = 150, TILE_HEIGHT = 200;
+	public final static int ROWS = 3, TILE_WIDTH = 150, TILE_HEIGHT = 200;
 
-	public final static int[] velocity = {40, 20, 10, 2};
+	public int COLUMNS = 3;
+
+	public final static int[] velocity = {40, 20, 10, 5};
 
 	public final static int[] keyCodeList = {83, 68, 70, 32, 74, 75, 76};
 	public Map<Integer, Integer> keyCodeToX = new HashMap<Integer, Integer>();
@@ -44,18 +46,35 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 
 	public int combo = 0;
 
-	public MidiSound music = new MidiSound("./music/music.mid");
+	public int speed;
+
+	public MidiSound music;
 
 	public Set<Integer> pressedKeys = new HashSet<>();
 
-	public DontTouchTheWhiteTile()
+	public String username;
+
+	public DontTouchTheWhiteTile(String username, int column, String speed, String songName)
 	{
+		this.username = username;
+		this.COLUMNS = column;
+		if (speed.equals("slow")) {
+			this.speed = velocity[0];
+		} else if (speed.equals("fast")) {
+			this.speed = velocity[1];
+		} else if (speed.equals("super fast")) {
+			this.speed = velocity[2];
+		} else if (speed.equals("hell")) {
+			this.speed = velocity[3];
+		} else {
+			this.speed = velocity[0];
+		}
 		for (int i = 0; i < COLUMNS; i++) {
 			keyCodeToX.put(keyCodeList[i + (int) ((7 - COLUMNS) / 2) ], (int) (TILE_WIDTH * (i+0.5)));
 		}
 		JFrame frame = new JFrame("Don't Touch The White Tile!");
 		Timer timer = new Timer(28, this);
-
+		music = new MidiSound(songName);
 		renderer = new Renderer();
 		random = new Random();
 
@@ -95,7 +114,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 	{
 		renderer.repaint();
 		timescnt++;
-		int speed = velocity[1];
+		// int speed = velocity[2];
 		if(longTileRound > 0) longTileRound = longTileRound - TILE_HEIGHT / speed;
 		if(longTileRound == 0) longTileColumn = -1;
 		boolean getNewTile = false;
@@ -231,8 +250,11 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 
 	public static void main(String[] args)
 	{
-		dttwt = new DontTouchTheWhiteTile();
-		dttwt.music.run();
+		ComponentInWindow win = new ComponentInWindow();
+        win.setBounds(100, 100, 320, 310);
+        win.setTitle("ss");
+		// dttwt = new DontTouchTheWhiteTile();
+		// dttwt.music.run();
 	}
 
 	@Override

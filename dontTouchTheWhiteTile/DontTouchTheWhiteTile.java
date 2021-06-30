@@ -15,11 +15,11 @@ import javax.swing.Timer;
 public class DontTouchTheWhiteTile implements ActionListener, MouseListener, KeyListener
 {
 
-	public final static int ROWS = 3, TILE_WIDTH = 150, TILE_HEIGHT = 200;
+	public final static int ROWS = 3, TILE_WIDTH = 330, TILE_HEIGHT = 300;
 
 	public int COLUMNS = 3;
 
-	public final static int[] velocity = {40, 20, 10, 5};
+	public final static int[] velocity = {30, 20, 10, 3};
 
 	public final static int[] keyCodeList = {83, 68, 70, 32, 74, 75, 76};
 	public Map<Integer, Integer> keyCodeToX = new HashMap<Integer, Integer>();
@@ -118,26 +118,6 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 		if(longTileRound > 0) longTileRound = longTileRound - TILE_HEIGHT / speed;
 		if(longTileRound == 0) longTileColumn = -1;
 		boolean getNewTile = false;
-		int cnt = 0;
-
-
-		/*if(timescnt > 200) speed = velocity[1];
-		if(timescnt > 400) speed = velocity[2];*/
-
-		// int speed = velocity[0];
-
-
-//		if(timescnt > 200) {
-//			speed = velocity[1];
-//			music.ChangeSpeed(2.0F);
-//		}
-//		if(timescnt > 400) {
-//			speed = velocity[2];
-//			music.ChangeSpeed(4.0F);
-//		}
-//		if(!music.CheckRunning()){
-//
-//		}
 
 		for(Tile tile : tiles){
 			tile.y = tile.y + TILE_HEIGHT / speed;
@@ -159,15 +139,12 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 				}
 				tiles.remove(i);
 				getNewTile = true;
-				cnt++;
 				i--;
 			}
 		}
-		// System.out.println("-------------------------------cnt: " + cnt + "-------------------------------");
 
 		if(getNewTile){
-			// System.out.println("Time : " + timescnt);
-			boolean createLongTail = (random.nextInt(1) == 0);
+			boolean createLongTail = (random.nextInt(10) == 0);
 			if(!hasLongTile && createLongTail){
 				longTileColumn = random.nextInt(COLUMNS);
 				longTileRound = random.nextInt(3) + 5;
@@ -187,8 +164,6 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 		KeepTrackTheKeyboard();
 		if(!music.CheckRunning())
 			gameOver = true;
-
-		milSecDelay++;
 	}
 
 	public void render(Graphics g)
@@ -216,17 +191,22 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 				}
 				else{
 					if(!tile.clicked){
-						LongTile thisTile = (LongTile)tile;
+						g.setColor(Color.black);
+						g.fillRect(tile.x, tile.y, TILE_WIDTH, tile.tileLength * TILE_HEIGHT);
+						g.setColor(Color.white);
+						g.drawRect(tile.x, tile.y, TILE_WIDTH, tile.tileLength * TILE_HEIGHT);
+					}
+					else if(!tile.released){
 						g.setColor(Color.GRAY);
-						//System.out.println("Gray length " + (tile.tileLength * TILE_HEIGHT - thisTile.lastClickPos));
-						g.fillRect(thisTile.x, thisTile.y + thisTile.lastClickPos, TILE_WIDTH, tile.tileLength * TILE_HEIGHT - thisTile.lastClickPos);
+						System.out.println("Gray length " + (tile.tileLength * TILE_HEIGHT - tile.lastClickPos));
+						g.fillRect(tile.x, tile.y + tile.lastClickPos, TILE_WIDTH, tile.tileLength * TILE_HEIGHT - tile.lastClickPos);
 						g.setColor(Color.BLACK);
-						g.fillRect(thisTile.x, thisTile.y, TILE_WIDTH, thisTile.lastClickPos);
+						g.fillRect(tile.x, tile.y, TILE_WIDTH, tile.lastClickPos);
 					}
 					else{
-						g.setColor(tile.black ? Color.BLACK : Color.WHITE);
+						g.setColor(Color.GRAY);
 						g.fillRect(tile.x, tile.y, TILE_WIDTH, tile.tileLength * TILE_HEIGHT);
-						g.setColor(tile.black ? Color.WHITE : Color.BLACK);
+						g.setColor(Color.black);
 						g.drawRect(tile.x, tile.y, TILE_WIDTH, tile.tileLength * TILE_HEIGHT);
 					}
 				}
@@ -236,7 +216,8 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 			g.setFont(new Font(String.valueOf(combo), Font.BOLD, 50));
 			g.drawString(String.valueOf(combo), 0, 100);
 			g.setColor(Color.RED);
-			g.setFont(new Font(String.valueOf(score), Font.BOLD, 100));
+			int fontSize = 100;
+			g.setFont(new Font(String.valueOf(score), Font.BOLD, fontSize));
 			g.drawString(String.valueOf(score), TILE_WIDTH, 100);
 			g.setColor(Color.RED);
 			g.drawLine(0, TILE_HEIGHT * (ROWS - 1), TILE_WIDTH * COLUMNS, TILE_HEIGHT * (ROWS - 1));
@@ -359,18 +340,17 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 									score += (100 + 10 * combo);
 									System.out.println("You've scored " + (100 + 10 * combo) + " points!");
 									milSecDelay = 0;
-									// tile.clicked = true;
 									combo += 1;
 								} else {
 									if(!tile.clicked){
+										System.out.println("long tile in");
 										tile.setClicked(true);
 										tile.lastClickPos = y - tile.y;
+										System.out.println("long tile lastClickPos = " + tile.lastClickPos);
 									}
 									score += (10 + 10 * combo);
 									System.out.println("You've scored " + (10 + 10 * combo) + " points!");
 									milSecDelay = 0;
-									// tile.clicked = true;
-									// combo += 1;
 								}
 							} else {
 								score -= 100;

@@ -340,45 +340,45 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 //		int x = keyCodeToX.get(keyCode);
 //		int y = TILE_HEIGHT * (ROWS - 1);
 		// System.out.println("fuck1 " + x + " " + y);
-		for (Iterator<Integer> it = pressedKeys.iterator(); it.hasNext();) {
-			System.out.print(it.next() + " ");
-		}
-		System.out.println();
-		Point offset = new Point();
-		if (!pressedKeys.isEmpty()) {
-			for (Iterator<Integer> it = pressedKeys.iterator(); it.hasNext();) {
-				int a = it.next();
-
-				if (!keyCodeToX.containsKey(a)) {
-					continue;
-				}
-				int x = keyCodeToX.get(a);
-				int y = TILE_HEIGHT * (ROWS - 1);
-				if (!gameOver) {
-					for (int i = 0; i < tiles.size(); i++) {
-						Tile tile = tiles.get(i);
-						// System.out.println(tile.pointInTile(x, y));
-						if (tile.pointInTile(x, y) && !tile.clicked) {
-							// System.out.println("fuck2 " + tile.x + " " + tile.y + " " + tile.black);
-							if (tile.black) {
-								if (tile.tileLength == 1) {
-									tile.setClicked(true);
-									pressedKeys.remove(e.getKeyCode());
-								}
-								score += (100 + 10 * combo);
-								System.out.println("You've scored " + (100 + 10 * combo) + " points!");
-								milSecDelay = 0;
-								// tile.clicked = true;
-								combo += 1;
-							} else {
-								combo = 0;
-							}
-
-						}
-					}
-				}
-			}
-		}
+//		for (Iterator<Integer> it = pressedKeys.iterator(); it.hasNext();) {
+//			System.out.print(it.next() + " ");
+//		}
+//		System.out.println();
+//		Point offset = new Point();
+//		if (!pressedKeys.isEmpty()) {
+//			for (Iterator<Integer> it = pressedKeys.iterator(); it.hasNext();) {
+//				int a = it.next();
+//
+//				if (!keyCodeToX.containsKey(a)) {
+//					continue;
+//				}
+//				int x = keyCodeToX.get(a);
+//				int y = TILE_HEIGHT * (ROWS - 1);
+//				if (!gameOver) {
+//					for (int i = 0; i < tiles.size(); i++) {
+//						Tile tile = tiles.get(i);
+//						// System.out.println(tile.pointInTile(x, y));
+//						if (tile.pointInTile(x, y) && !tile.clicked) {
+//							// System.out.println("fuck2 " + tile.x + " " + tile.y + " " + tile.black);
+//							if (tile.black) {
+//								if (tile.tileLength == 1) {
+//									tile.setClicked(true);
+//									pressedKeys.remove(e.getKeyCode());
+//								}
+//								score += (100 + 10 * combo);
+//								System.out.println("You've scored " + (100 + 10 * combo) + " points!");
+//								milSecDelay = 0;
+//								// tile.clicked = true;
+//								combo += 1;
+//							} else {
+//								combo = 0;
+//							}
+//
+//						}
+//					}
+//				}
+//			}
+//		}
 		System.out.println("aaaa");
 	}
 
@@ -429,7 +429,11 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 						if (tile.pointInTile(x, y) && !tile.clicked) {
 							// System.out.println("fuck2 " + tile.x + " " + tile.y + " " + tile.black);
 							if (tile.black) {
-								if (tile.tileLength == 1) tile.setClicked(true);
+								if (tile.tileLength == 1) {
+									tile.setClicked(true);
+									it.remove();
+									
+								}
 								score += (100 + 10 * combo);
 								System.out.println("You've scored " + (100 + 10 * combo) + " points!");
 								milSecDelay = 0;

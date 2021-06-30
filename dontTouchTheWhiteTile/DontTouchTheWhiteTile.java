@@ -166,6 +166,8 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 			}
 		}
 		KeepTrackTheKeyboard();
+		if(!music.CheckRunning())
+			gameOver = true;
 
 		milSecDelay++;
 	}
@@ -432,7 +434,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 								if (tile.tileLength == 1) {
 									tile.setClicked(true);
 									it.remove();
-									
+
 								}
 								score += (100 + 10 * combo);
 								System.out.println("You've scored " + (100 + 10 * combo) + " points!");

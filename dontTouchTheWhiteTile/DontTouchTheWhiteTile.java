@@ -433,16 +433,16 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 							// System.out.println("fuck2 " + tile.x + " " + tile.y + " " + tile.black);
 							if (tile.black) {
 								if (tile.tileLength == 1) {
-									// tile.setClicked(true);
+									tile.setClicked(true);
 									it.remove();
 									score += (100 + 10 * combo);
 									System.out.println("You've scored " + (100 + 10 * combo) + " points!");
 									milSecDelay = 0;
 									// tile.clicked = true;
-									// combo += 1;
+									combo += 1;
 								} else {
 									score += (10 + 10 * combo);
-									System.out.println("You've scored " + (10 * combo) + " points!");
+									System.out.println("You've scored " + (10 + 10 * combo) + " points!");
 									milSecDelay = 0;
 									// tile.clicked = true;
 									// combo += 1;

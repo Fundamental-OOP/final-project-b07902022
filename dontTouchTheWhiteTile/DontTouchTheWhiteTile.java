@@ -52,6 +52,8 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 
 	public Set<Integer> pressedKeys = new HashSet<>();
 
+	public int countStart = 3;
+
 	public String username;
 
 	public DontTouchTheWhiteTile(String username, int column, String speed, String songName)
@@ -73,7 +75,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 			keyCodeToX.put(keyCodeList[i + (int) ((7 - COLUMNS) / 2) ], (int) (TILE_WIDTH * (i+0.5)));
 		}
 		JFrame frame = new JFrame("Don't Touch The White Tile!");
-		Timer timer = new Timer(28, this);
+		Timer timer = new Timer(20, this);
 		music = new MidiSound(songName);
 		renderer = new Renderer();
 		random = new Random();
@@ -102,6 +104,8 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 
 			int blackTile = random.nextInt(COLUMNS);
 
+			if(y >= 0) blackTile = -1;
+
 			for(int x = 0; x < ROWS; x++){
 				ShortTile newTile = new ShortTile(x * TILE_WIDTH, y * TILE_HEIGHT, x == blackTile);
 				tiles.add(newTile);
@@ -119,12 +123,19 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 		if(longTileRound == 0) longTileColumn = -1;
 		boolean getNewTile = false;
 
-		for(Tile tile : tiles){
-			tile.y = tile.y + TILE_HEIGHT / speed;
-			if(tile.tileLength > 1){
-				if(tile.clicked && !tile.released && tile.lastClickPos > 0){
-					tile.lastClickPos = tile.lastClickPos - TILE_HEIGHT / speed;
+		if(timescnt > 150){
+			for(Tile tile : tiles){
+				tile.y = tile.y + TILE_HEIGHT / speed;
+				if(tile.tileLength > 1){
+					if(tile.clicked && !tile.released && tile.lastClickPos > 0){
+						tile.lastClickPos = tile.lastClickPos - TILE_HEIGHT / speed;
+					}
 				}
+			}
+		}
+		else{
+			if(timescnt % 50 == 0){
+				countStart = 3 - (timescnt / 50);
 			}
 		}
 
@@ -210,6 +221,21 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 						g.drawRect(tile.x, tile.y, TILE_WIDTH, tile.tileLength * TILE_HEIGHT);
 					}
 				}
+			}
+
+			if(countStart >= -10){
+				if(countStart <= 0){
+					countStart--;
+					g.setColor(Color.RED);
+					g.setFont(new Font("Start!", Font.BOLD, 150));
+					g.drawString("Start!", TILE_WIDTH, ROWS * TILE_HEIGHT / 2);
+				}
+				else{
+					g.setColor(Color.RED);
+					g.setFont(new Font(String.valueOf(countStart), Font.BOLD, 150));
+					g.drawString(String.valueOf(countStart), TILE_WIDTH * COLUMNS / 2, ROWS * TILE_HEIGHT / 2);
+				}
+				
 			}
 
 			g.setColor(Color.BLUE);

@@ -58,10 +58,10 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 
 	public String username;
 
-	public Music[] musics = {new Music("Canon", "./music/music.mid", 20, 158F),
-			new Music("Turkish March", "./music/turkey.mid", 20, 70.5F),
-			new Music("Für Elise", "./music/garbage.mid", 20, 83.6F),
-			new Music("Ballade pour Adeline", "./music/water.mid", 22, 76F)
+	public Music[] musics = {new Music("Canon", "./music/music.mid", 20, 175F),
+			new Music("Turkish March", "./music/turkey.mid", 20, 80F),
+			new Music("Für Elise", "./music/garbage.mid", 20, 92.6F),
+			new Music("Ballade pour Adeline", "./music/water.mid", 22, 85F)
 			};
 
 

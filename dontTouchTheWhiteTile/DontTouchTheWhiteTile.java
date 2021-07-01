@@ -17,6 +17,8 @@ import java.util.concurrent.TimeUnit;
 import javax.swing.JFrame;
 import javax.swing.Timer;
 
+import java.io.File;
+
 public class DontTouchTheWhiteTile implements ActionListener, MouseListener, KeyListener
 {
 
@@ -26,7 +28,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 
 	public final static int[] velocity = {30, 15, 5, 3};
 
-	public int[] keyCodeList = {83, 68, 70, 32, 74, 75, 76};
+	public int[] keyCodeList = {83, 68, 70, 32, 74, 75, 76, 82};
 	public Map<Integer, Integer> keyCodeToX = new HashMap<Integer, Integer>();
 	
 	public static DontTouchTheWhiteTile dttwt;
@@ -81,7 +83,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 
 	public DontTouchTheWhiteTile(String username, int column, String speed, String songName)
 	{
-		if (username == null) this.username = "player";
+		if (username.equals("")) this.username = "player";
 		else this.username = username;
 		if (column == 0) this.COLUMNS = 3;
 		else this.COLUMNS = column;
@@ -102,11 +104,11 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 			this.speed = velocity[0];
 		}
 		if (this.COLUMNS == 3) {
-			keyCodeList = new int[] {70, 32, 74};
+			keyCodeList = new int[] {70, 32, 74, 82};
 		} else if (this.COLUMNS == 4) {
-			keyCodeList = new int[] {68, 70, 74, 75};
+			keyCodeList = new int[] {68, 70, 74, 75, 82};
 		}
-		for (int i = 0; i < COLUMNS; i++) {
+		for (int i = 0; i <= COLUMNS; i++) {
 			keyCodeToX.put(keyCodeList[i], (int) (TILE_WIDTH * (i+0.5)));
 		}
 		int nowTimer = musics[0].getTimerNumber();
@@ -152,8 +154,8 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 		tiles = new ArrayList<Tile>();
 		try {
 			music.run();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		} catch (InterruptedException err) {
+			err.printStackTrace();
 		}
 
 		for(int y = -1; y < ROWS; y++){
@@ -219,7 +221,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 				longTileRound = (longTileRound + 1) * TILE_HEIGHT;
 				tiles.add(newTile);
 				hasLongTile = true;
-				System.out.println("long");
+				//System.out.println("long");
 			}
 			int blackTile = random.nextInt(COLUMNS);
 			for(int j = 0; j < COLUMNS; j++){
@@ -229,7 +231,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 			}
 		}
 		KeepTrackTheKeyboard();
-		if(!music.CheckRunning() || timescnt > 3000){
+		if(!music.CheckRunning() || timescnt > 3150){
 			music.stop();
 			gameOver = true;
 		}
@@ -237,13 +239,13 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 
 	public void render(Graphics g)
 	{
-		g.setColor(Color.WHITE);
-		g.fillRect(0, 0, TILE_WIDTH * COLUMNS, TILE_HEIGHT * ROWS);
-
 		g.setFont(new Font("Arial", 1, 100));
 
 		if (!gameOver)
 		{
+			g.setColor(Color.WHITE);
+			g.fillRect(0, 0, TILE_WIDTH * COLUMNS, TILE_HEIGHT * ROWS);
+
 			for (Tile tile : tiles)
 			{
 				if(tile.tileLength == 1){
@@ -296,10 +298,20 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 				
 			}
 
+			g.setColor(Color.BLACK);
+			g.setFont(new Font("Time", Font.BOLD, 50));
+			g.drawString("Time",COLUMNS * TILE_WIDTH + 100, 100);
+			if(timescnt > 150 && timescnt <= 3150){
+				int nowTime = 63 - ((timescnt - 1) / 50);
+				int dx = 0;
+				if(timescnt <= 650) dx = 1;
+				g.drawString(String.valueOf(nowTime), COLUMNS * TILE_WIDTH + 155 - 15 * dx, 160);
+			}
+
 			g.setColor(Color.BLUE);
 			g.setFont(new Font(String.valueOf(combo), Font.BOLD, 50));
-			g.drawString("Combo" , COLUMNS * TILE_WIDTH + 80, 100);
-			g.drawString(String.valueOf(combo), COLUMNS * TILE_WIDTH + 155, 160);
+			g.drawString("Combo" , COLUMNS * TILE_WIDTH + 80, 250);
+			g.drawString(String.valueOf(combo), COLUMNS * TILE_WIDTH + 155, 310);
 			g.setColor(Color.RED);
 			int score_shift = 0;
 			int cnt = Math.abs(score);
@@ -308,19 +320,21 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 				score_shift++;
 			}
 			if(score < 0) score_shift = score_shift + 1;
-			System.out.println("shift:" + score_shift);
+			//System.out.println("shift:" + score_shift);
 
 			g.setFont(new Font(String.valueOf(score), Font.BOLD, 50));
-			g.drawString("Score", COLUMNS * TILE_WIDTH + 100, 250);
-			g.drawString(String.valueOf(score), COLUMNS * TILE_WIDTH + 155 - 16 * score_shift, 310);
+			g.drawString("Score", COLUMNS * TILE_WIDTH + 100, 400);
+			g.drawString(String.valueOf(score), COLUMNS * TILE_WIDTH + 155 - 16 * score_shift, 460);
 			g.setColor(Color.RED);
 			g.drawLine(0, TILE_HEIGHT * (ROWS - 1), TILE_WIDTH * COLUMNS, TILE_HEIGHT * (ROWS - 1));
 
 		}
 		else
 		{
+			g.setColor(Color.WHITE);
+			g.fillRect(0, 0, TILE_WIDTH * COLUMNS + 350, TILE_HEIGHT * ROWS);
 			g.setColor(Color.BLACK);
-			g.drawString("Game Over!", 100, TILE_HEIGHT - 150);
+			g.drawString("Game Over!", 230, TILE_HEIGHT - 150);
 			String DataName =  "data/" + song_Name + "_" + speed_String + "_" + COLUMNS + ".txt";
 			if(!write) {
 				write = true;
@@ -337,10 +351,10 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 			}
 
 			g.setFont(new Font(String.valueOf(score), Font.BOLD, 60));
-			g.drawString("Scoreboard" , 100, TILE_HEIGHT);
+			g.drawString("Scoreboard" , 230, TILE_HEIGHT);
 			g.setFont(new Font(String.valueOf(score), Font.BOLD, 20));
-			g.drawString("Username" , 100, TILE_HEIGHT + 100);
-			g.drawString("Score" , 450, TILE_HEIGHT + 100);
+			g.drawString("Username" , 230, TILE_HEIGHT + 100);
+			g.drawString("Score" , 580, TILE_HEIGHT + 100);
 			g.setColor(Color.DARK_GRAY);
 			try {
 				ArrayList<Player> scores = new ArrayList<>();
@@ -358,24 +372,23 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 				for(int i = 0; i < Math.min(5,num) ; i++){
 					String now_name = scores.get(i).name;
 					String score = String.valueOf(scores.get(i).score);
-					g.drawString(now_name, 100, height);
-					g.drawString(score, 450, height);
+					g.drawString(now_name, 230, height);
+					g.drawString(score, 580, height);
 					height += 20;
 				}
 				fr.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-
-
-
-
-
+			g.setColor(Color.RED);
+			g.setFont(new Font("Press R to restart the game...", Font.BOLD, 30));
+			g.drawString("Press R to restart game...", 320, (ROWS - 1) * TILE_HEIGHT + 100);
 		}
 	}
 
 	public static void main(String[] args)
 	{
+		new File("./data").mkdirs();
 		ComponentInWindow win = new ComponentInWindow();
         win.setBounds(100, 100, 370, 400);
         win.setTitle("Set up before game!");
@@ -457,7 +470,12 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 				}
 			}
 		}
-		else start();
+		else{
+			System.out.println("keyCode : " + keyCode);
+			if(keyCode == 82){
+				start();
+			}
+		}
 		// System.out.println("________________");
 		// TODO Auto-generated method stub
 		System.out.println("bbbb");

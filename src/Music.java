@@ -1,4 +1,4 @@
-package dontTouchTheWhiteTile;
+package src;
 
 public class Music {
     private final String name;

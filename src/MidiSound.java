@@ -1,4 +1,4 @@
-package dontTouchTheWhiteTile;
+package src;
 
 import java.io.*;
 import java.util.concurrent.TimeUnit;

@@ -1,4 +1,4 @@
-package dontTouchTheWhiteTile;
+package src;
 import java.awt.*;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;

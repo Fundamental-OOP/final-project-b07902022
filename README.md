@@ -11,7 +11,7 @@ Or typing the following commands:
 
 ```bash=
 javac -cp . -sourcepath src -d ./out/ ./src/*.java
-java -cp out/ dontTouchTheWhiteTile/DontTouchTheWhiteTile
+java -cp out/ src/DontTouchTheWhiteTile
 ```
 
 Once the program is running, you will see the starting window. You can adjust your settings here. After that, you can click the play button to play. If you don't type anything the default will be 

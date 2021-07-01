@@ -1,5 +1,5 @@
 run:
 	javac -cp . -sourcepath src -d ./out/ ./src/*.java
-	java -cp out/ dontTouchTheWhiteTile/DontTouchTheWhiteTile
+	java -cp out/ src/DontTouchTheWhiteTile
 clean:
-	rm ./out/DontTouchTheWhiteTile/*.class
+	rm ./out/src/*.class

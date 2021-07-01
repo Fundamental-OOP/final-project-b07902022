@@ -1,4 +1,4 @@
-package dontTouchTheWhiteTile;
+package src;
 
 public class Player implements Comparable<Player>{
     public String name;

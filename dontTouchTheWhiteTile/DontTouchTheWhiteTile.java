@@ -3,8 +3,6 @@ package dontTouchTheWhiteTile;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.BufferedReader;
@@ -19,7 +17,7 @@ import javax.swing.Timer;
 
 import java.io.File;
 
-public class DontTouchTheWhiteTile implements ActionListener, MouseListener, KeyListener
+public class DontTouchTheWhiteTile implements ActionListener, KeyListener
 {
 
 	public final static int ROWS = 3, TILE_WIDTH = 250, TILE_HEIGHT = 300;
@@ -75,7 +73,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 
 	public Music[] musics = {new Music("Canon", "./music/music.mid", 20, 175F),
 			new Music("Turkish March", "./music/turkey.mid", 20, 80F),
-			new Music("Für Elise", "./music/garbage.mid", 20, 92.6F),
+			new Music("Fur Elise", "./music/garbage.mid", 20, 92.6F),
 			new Music("Ballade pour Adeline", "./music/water.mid", 22, 85F)
 			};
 
@@ -90,6 +88,9 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 		if (songName == null) this.song_Name = "Canon";
 		else this.song_Name = songName;
 		this.speed_String = speed;
+		if (speed_String == null) {
+			speed_String = "slow";
+		}
 		if (speed == null) {
 			this.speed = velocity[0];
 		} else if (speed.equals("slow")) {
@@ -98,7 +99,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 			this.speed = velocity[1];
 		} else if (speed.equals("super fast")) {
 			this.speed = velocity[2];
-		} else if (speed.equals("hell")) {
+		} else if (speed.equals("hell mode")) {
 			this.speed = velocity[3];
 		} else {
 			this.speed = velocity[0];
@@ -394,35 +395,6 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
         win.setTitle("Set up before game!");
 		// dttwt = new DontTouchTheWhiteTile();
 		// dttwt.music.run();
-	}
-
-	@Override
-	public void mouseClicked(MouseEvent e)
-	{
-
-	}
-
-	@Override
-	public void mousePressed(MouseEvent e)
-	{
-
-	}
-
-	@Override
-	public void mouseReleased(MouseEvent e)
-	{
-
-	}
-
-	@Override
-	public void mouseEntered(MouseEvent e)
-	{
-
-	}
-
-	@Override
-	public void mouseExited(MouseEvent e)
-	{
 	}
 
 	@Override

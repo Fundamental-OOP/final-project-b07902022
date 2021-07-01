@@ -1,24 +1,28 @@
 package dontTouchTheWhiteTile;
 
 import java.io.*;
+import java.util.concurrent.TimeUnit;
 import javax.sound.midi.*;
 
 public class MidiSound {
     private static Sequencer midiPlayer;
     private final String filename;
+    private Float speed;
 
-    public MidiSound(String input){
-        filename = input;
+    public MidiSound(String input, Float speed){
+        this.filename = input;
+        this.speed = speed;
     }
-    public static void startMidi(String midFilename) {
+    public void startMidi(String midFilename) {
         try {
             File midiFile = new File(midFilename);
             Sequence song = MidiSystem.getSequence(midiFile);
+
             midiPlayer = MidiSystem.getSequencer();
             midiPlayer.open();
             midiPlayer.setSequence(song);
             midiPlayer.setLoopCount(0); // repeat 0 times (play once)
-            midiPlayer.setTempoInBPM(89F);
+            midiPlayer.setTempoInBPM(this.speed);
             midiPlayer.start();
             System.out.println(midiPlayer.getTempoInMPQ());
         } catch (MidiUnavailableException | InvalidMidiDataException | IOException e) {
@@ -27,31 +31,10 @@ public class MidiSound {
     }
 
     // testing main method
-    public void run() {
+    public void run() throws InterruptedException {
         startMidi(filename);     // start the midi player
-//        float x = 1;
-//        while(true) {
-//            try {
-//                Thread.sleep(5000);   // delay
-//            } catch (InterruptedException e) {
-//            }
-//            System.out.println("faster");
-////        midiPlayer.setTempoInBPM(60);
-//            x += 0.2;
-//            midiPlayer.setTempoFactor(x);   // >1 to speed up the tempo
-//        }
-//        try {
-//            Thread.sleep(10000);   // delay
-//        } catch (InterruptedException e) { }
-//        midiPlayer.setTempoFactor(10.0F);
-
-        // Do this on every move step, you could change to another song
-//        if (!midiPlayer.isRunning()) {  // previous song finished
-//            // reset midi player and start a new song
-//            midiPlayer.stop();
-//            midiPlayer.close();
-//            startMidi("song2.mid");
-//        }
+        //TimeUnit.MINUTES.sleep(1);
+        //midiPlayer.stop();
     }
 
     public void ChangeSpeed(float x){
@@ -60,6 +43,7 @@ public class MidiSound {
     public boolean CheckRunning(){
         return 	midiPlayer.isRunning();
     }
+    public void stop(){midiPlayer.stop();}
 
 
 }

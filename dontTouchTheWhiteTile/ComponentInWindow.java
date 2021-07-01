@@ -114,7 +114,6 @@ public class ComponentInWindow extends JFrame {
         add(new JLabel("music:"));
         comBox = new JComboBox<>();
         comBox.addItem("");
-        comBox.addItem("./music/music.mid");
         comBox.addItem("Canon");
         comBox.addItem("Turkish March");
         comBox.addItem("Für Elise");

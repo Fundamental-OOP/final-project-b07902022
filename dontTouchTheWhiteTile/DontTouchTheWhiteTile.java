@@ -19,7 +19,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 
 	public int COLUMNS = 3;
 
-	public final static int[] velocity = {30, 20, 10, 3};
+	public final static int[] velocity = {30, 15, 5, 3};
 
 	public final static int[] keyCodeList = {83, 68, 70, 32, 74, 75, 76};
 	public Map<Integer, Integer> keyCodeToX = new HashMap<Integer, Integer>();
@@ -48,6 +48,8 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 
 	public int speed;
 
+	public Float factor = 1F;
+
 	public MidiSound music;
 
 	public Set<Integer> pressedKeys = new HashSet<>();
@@ -56,9 +58,18 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 
 	public String username;
 
+	public Music[] musics = {new Music("Canon", "./music/music.mid", 20, 158F),
+			new Music("Turkish March", "./music/turkey.mid", 20, 70.5F),
+			new Music("Für Elise", "./music/garbage.mid", 20, 83.6F),
+			new Music("Ballade pour Adeline", "./music/water.mid", 22, 76F)
+			};
+
+
+
 	public DontTouchTheWhiteTile(String username, int column, String speed, String songName)
 	{
 		this.username = username;
+		if(column == 0) column = 3;
 		this.COLUMNS = column;
 		if (speed.equals("slow")) {
 			this.speed = velocity[0];
@@ -74,9 +85,21 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 		for (int i = 0; i < COLUMNS; i++) {
 			keyCodeToX.put(keyCodeList[i + (int) ((7 - COLUMNS) / 2) ], (int) (TILE_WIDTH * (i+0.5)));
 		}
+		int nowTimer = musics[0].getTimerNumber();
+		Float nowSpeed = musics[0].getSpeed();
+		String sonDir = musics[0].getDirection();
+		for (Music value : musics) {
+			if (value.getName().equals(songName)) {
+				nowTimer = value.getTimerNumber();
+				nowSpeed = value.getSpeed();
+				sonDir = value.getDirection();
+			}
+		}
+
+
 		JFrame frame = new JFrame("Don't Touch The White Tile!");
-		Timer timer = new Timer(20, this);
-		music = new MidiSound(songName);
+		Timer timer = new Timer(nowTimer, this);
+		music = new MidiSound(sonDir, nowSpeed);
 		renderer = new Renderer();
 		random = new Random();
 
@@ -87,6 +110,8 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 		frame.addMouseListener(this);
 		frame.addKeyListener(this);
 		frame.setResizable(false);
+
+
 
 		start();
 
@@ -175,8 +200,10 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 			}
 		}
 		KeepTrackTheKeyboard();
-		if(!music.CheckRunning())
+		if(!music.CheckRunning() || timescnt > 3000){
+			music.stop();
 			gameOver = true;
+		}
 	}
 
 	public void render(Graphics g)

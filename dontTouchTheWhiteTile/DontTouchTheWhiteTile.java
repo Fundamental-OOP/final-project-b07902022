@@ -7,7 +7,12 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import javax.swing.JFrame;
 import javax.swing.Timer;
@@ -36,6 +41,8 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 
 	public boolean gameOver;
 
+	public String song_Name;
+
 	public boolean hasLongTile = false;
 
 	public int longTileColumn = -1;
@@ -45,6 +52,8 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 	public int timescnt = 0;
 
 	public int combo = 0;
+
+	private int first = 1;
 
 	public int speed;
 
@@ -58,6 +67,10 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 
 	public String username;
 
+	public String speed_String;
+
+	public boolean write = false;
+
 	public Music[] musics = {new Music("Canon", "./music/music.mid", 20, 175F),
 			new Music("Turkish March", "./music/turkey.mid", 20, 80F),
 			new Music("Für Elise", "./music/garbage.mid", 20, 92.6F),
@@ -68,9 +81,12 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 
 	public DontTouchTheWhiteTile(String username, int column, String speed, String songName)
 	{
+		if (username.equals("")) username = "None";
 		this.username = username;
 		if(column == 0) column = 3;
 		this.COLUMNS = column;
+		this.song_Name = songName;
+		this.speed_String = speed;
 		if (speed.equals("slow")) {
 			this.speed = velocity[0];
 		} else if (speed.equals("fast")) {
@@ -124,6 +140,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 		gameOver = false;
 		timescnt = 0;
 		countStart = 3;
+		write = false;
 		tiles = new ArrayList<Tile>();
 
 
@@ -200,7 +217,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 			}
 		}
 		KeepTrackTheKeyboard();
-		if(!music.CheckRunning() || timescnt > 3000){
+		if(!music.CheckRunning() || timescnt > 300){
 			music.stop();
 			gameOver = true;
 		}
@@ -286,11 +303,62 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 			g.drawString(String.valueOf(score), COLUMNS * TILE_WIDTH + 155 - 16 * score_shift, 310);
 			g.setColor(Color.RED);
 			g.drawLine(0, TILE_HEIGHT * (ROWS - 1), TILE_WIDTH * COLUMNS, TILE_HEIGHT * (ROWS - 1));
+
 		}
 		else
 		{
 			g.setColor(Color.BLACK);
-			g.drawString("Game Over!", 100, TILE_HEIGHT);
+			g.drawString("Game Over!", 100, TILE_HEIGHT - 150);
+			String DataName =  "data/" + song_Name + "_" + speed_String + "_" + COLUMNS + ".txt";
+			if(!write) {
+				write = true;
+				FileWriter fw = null;
+
+				try {
+					fw = new FileWriter(DataName, true);
+					fw.append(this.username + " " + String.valueOf(score) + "\r\n");
+					fw.flush();
+					fw.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+			g.setFont(new Font(String.valueOf(score), Font.BOLD, 60));
+			g.drawString("Scoreboard" , 100, TILE_HEIGHT);
+			g.setFont(new Font(String.valueOf(score), Font.BOLD, 20));
+			g.drawString("Username" , 100, TILE_HEIGHT + 100);
+			g.drawString("Score" , 450, TILE_HEIGHT + 100);
+			g.setColor(Color.DARK_GRAY);
+			try {
+				ArrayList<Player> scores = new ArrayList<>();
+				FileReader fr = new FileReader(DataName);
+				BufferedReader br = new BufferedReader(fr);
+				int num = 0;
+				while (br.ready()) {
+					String each_data = br.readLine();
+					num++;
+					//System.out.println(Integer.parseInt(each_data.split(" ")[1]));
+					scores.add(new Player(each_data.split(" ")[0], Integer.parseInt(each_data.split(" ")[1])));
+				}
+				Collections.sort(scores);
+				int height = TILE_HEIGHT + 130;
+				for(int i = 0; i < Math.min(5,num) ; i++){
+					String now_name = scores.get(i).name;
+					String score = String.valueOf(scores.get(i).score);
+					g.drawString(now_name, 100, height);
+					g.drawString(score, 450, height);
+					height += 20;
+				}
+				fr.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+
+
+
+
 		}
 	}
 

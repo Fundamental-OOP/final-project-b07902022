@@ -81,7 +81,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 
 	public DontTouchTheWhiteTile(String username, int column, String speed, String songName)
 	{
-		if (username == null) this.username = "player";
+		if (username.equals("")) this.username = "player";
 		this.username = username;
 		if (column == 0) column = 3;
 		this.COLUMNS = column;
@@ -423,6 +423,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 			return;
 		}
 		System.out.println("aaaa");
+
 	}
 
 	@Override

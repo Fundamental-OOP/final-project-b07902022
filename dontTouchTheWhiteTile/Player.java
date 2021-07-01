@@ -10,9 +10,9 @@ public class Player implements Comparable<Player>{
 
     @Override
     public int compareTo(Player o) {
-        if (o.score < this.score)
+        if (o.score > this.score)
             return 1 ;
-        else if (o.score > this.score)
+        else if (o.score < this.score)
             return - 1 ;
         else
             return 0 ;

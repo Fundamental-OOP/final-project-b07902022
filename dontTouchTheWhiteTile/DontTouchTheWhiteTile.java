@@ -134,7 +134,6 @@ public class DontTouchTheWhiteTile implements ActionListener, KeyListener
 		frame.add(renderer);
 		frame.setVisible(true);
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		frame.addMouseListener(this);
 		frame.addKeyListener(this);
 		frame.setResizable(false);
 

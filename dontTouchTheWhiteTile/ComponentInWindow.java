@@ -140,7 +140,7 @@ public class ComponentInWindow extends JFrame {
                     setVisible(false);
                     dispose();
                     dttwt = new DontTouchTheWhiteTile(userName, column, speed, songName);
-                    dttwt.music.run();
+
                 }catch(Exception ex){
                     System.out.println(ex);
                 }

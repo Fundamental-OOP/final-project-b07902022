@@ -81,11 +81,12 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 
 	public DontTouchTheWhiteTile(String username, int column, String speed, String songName)
 	{
-		if (username.equals("")) this.username = "player";
-		this.username = username;
-		if (column == 0) column = 3;
-		this.COLUMNS = column;
-		this.song_Name = songName;
+		if (username == null) this.username = "player";
+		else this.username = username;
+		if (column == 0) this.COLUMNS = 3;
+		else this.COLUMNS = column;
+		if (songName == null) this.song_Name = "Canon";
+		else this.song_Name = songName;
 		this.speed_String = speed;
 		if (speed == null) {
 			this.speed = velocity[0];
@@ -149,7 +150,11 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 		countStart = 3;
 		write = false;
 		tiles = new ArrayList<Tile>();
-
+		try {
+			music.run();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 
 		for(int y = -1; y < ROWS; y++){
 
@@ -224,7 +229,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 			}
 		}
 		KeepTrackTheKeyboard();
-		if(!music.CheckRunning() || timescnt > 300){
+		if(!music.CheckRunning() || timescnt > 3000){
 			music.stop();
 			gameOver = true;
 		}

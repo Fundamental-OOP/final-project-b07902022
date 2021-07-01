@@ -32,6 +32,7 @@ public class MidiSound {
 
     // testing main method
     public void run() throws InterruptedException {
+
         startMidi(filename);     // start the midi player
         //TimeUnit.MINUTES.sleep(1);
         //midiPlayer.stop();

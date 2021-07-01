@@ -43,7 +43,7 @@ public class DontTouchTheWhiteTile implements ActionListener, KeyListener
 
 	public String song_Name;
 
-	public boolean hasLongTile = false;
+	public boolean hasSpecialTile = false;
 
 	public int longTileColumn = -1;
 
@@ -74,7 +74,7 @@ public class DontTouchTheWhiteTile implements ActionListener, KeyListener
 	public Music[] musics = {new Music("Canon", "./music/music.mid", 20, 175F),
 			new Music("Turkish March", "./music/turkey.mid", 20, 80F),
 			new Music("Fur Elise", "./music/garbage.mid", 20, 92.6F),
-			new Music("Ballade pour Adeline", "./music/water.mid", 22, 85F)
+			new Music("Ballade pour Adeline", "./music/water.mid", 20, 92F)
 			};
 
 
@@ -184,11 +184,8 @@ public class DontTouchTheWhiteTile implements ActionListener, KeyListener
 		if(timescnt > 150){
 			for(Tile tile : tiles){
 				tile.y = tile.y + TILE_HEIGHT / speed;
-				if(tile.tileLength > 1){
-					if(tile.clicked && !tile.released && tile.lastClickPos > 0){
-						tile.lastClickPos = tile.lastClickPos - TILE_HEIGHT / speed;
-					}
-				}
+				
+				tile.setLastClickPos(tile.lastClickPos - TILE_HEIGHT / speed);
 			}
 		}
 		else{
@@ -201,11 +198,9 @@ public class DontTouchTheWhiteTile implements ActionListener, KeyListener
 		{
 			Tile tile = tiles.get(i);
 			//tile.y += TILE_HEIGHT / 10;
-			if(tile.y == TILE_HEIGHT * ROWS){
-				if (tile.tileLength == 1 && tile.black && !tile.clicked) combo = 0;
-				if (tile.tileLength > 1){
-					hasLongTile = false;
-				}
+			if(tile.y == TILE_HEIGHT * ROWS) {
+				if (tile.black && !tile.clicked) combo = 0;
+				if (tile.isSpecialTile()) hasSpecialTile = false;
 				tiles.remove(i);
 				getNewTile = true;
 				i--;
@@ -214,13 +209,13 @@ public class DontTouchTheWhiteTile implements ActionListener, KeyListener
 
 		if(getNewTile){
 			boolean createLongTail = (random.nextInt(10) == 0);
-			if(!hasLongTile && createLongTail){
+			if(!hasSpecialTile && createLongTail){
 				longTileColumn = random.nextInt(COLUMNS);
 				longTileRound = random.nextInt(3) + 5;
 				LongTile newTile = new LongTile(longTileColumn * TILE_WIDTH, -longTileRound * TILE_HEIGHT, longTileRound);
 				longTileRound = (longTileRound + 1) * TILE_HEIGHT;
 				tiles.add(newTile);
-				hasLongTile = true;
+				hasSpecialTile = true;
 				//System.out.println("long");
 			}
 			int blackTile = random.nextInt(COLUMNS);
@@ -248,39 +243,7 @@ public class DontTouchTheWhiteTile implements ActionListener, KeyListener
 
 			for (Tile tile : tiles)
 			{
-				if(tile.tileLength == 1){
-					if(tile.clicked && tile.black){
-						g.setColor(Color.GRAY);
-						g.fillRect(tile.x, tile.y, TILE_WIDTH, TILE_HEIGHT);
-					}
-					else{
-						g.setColor(tile.black ? Color.BLACK : Color.WHITE);
-						g.fillRect(tile.x, tile.y, TILE_WIDTH, tile.tileLength * TILE_HEIGHT);
-						g.setColor(tile.black ? Color.WHITE : Color.BLACK);
-						g.drawRect(tile.x, tile.y, TILE_WIDTH, tile.tileLength * TILE_HEIGHT);
-					}
-				}
-				else{
-					if(!tile.clicked){
-						g.setColor(Color.black);
-						g.fillRect(tile.x, tile.y, TILE_WIDTH, tile.tileLength * TILE_HEIGHT);
-						g.setColor(Color.white);
-						g.drawRect(tile.x, tile.y, TILE_WIDTH, tile.tileLength * TILE_HEIGHT);
-					}
-					else if(!tile.released){
-						g.setColor(Color.GRAY);
-						System.out.println("Gray length " + (tile.tileLength * TILE_HEIGHT - tile.lastClickPos));
-						g.fillRect(tile.x, tile.y + tile.lastClickPos, TILE_WIDTH, tile.tileLength * TILE_HEIGHT - tile.lastClickPos);
-						g.setColor(Color.BLACK);
-						g.fillRect(tile.x, tile.y, TILE_WIDTH, tile.lastClickPos);
-					}
-					else{
-						g.setColor(Color.GRAY);
-						g.fillRect(tile.x, tile.y, TILE_WIDTH, tile.tileLength * TILE_HEIGHT);
-						g.setColor(Color.black);
-						g.drawRect(tile.x, tile.y, TILE_WIDTH, tile.tileLength * TILE_HEIGHT);
-					}
-				}
+				tile.renderTile(g, TILE_WIDTH, TILE_HEIGHT);
 			}
 
 			if(countStart >= -10){
@@ -430,15 +393,19 @@ public class DontTouchTheWhiteTile implements ActionListener, KeyListener
 		if (!gameOver) {
 			for (int i = 0; i < tiles.size(); i++) {
 				Tile tile = tiles.get(i);
-				// System.out.println(tile.pointInTile(x, y));
-				if (tile.pointInTile(x, y) && !tile.released) {
-					// System.out.println("fuck2 " + tile.x + " " + tile.y + " " + tile.black);
-					if (tile.black) {
-						tile.setReleased(true);
-						milSecDelay = 0;
-						combo += 1;
-					}
+				if (tile.handleKeyReleased(x, y)) {
+					milSecDelay = 0;
+					combo += 1;
 				}
+				// System.out.println(tile.pointInTile(x, y));
+				// if (tile.pointInTile(x, y) && !tile.released) {
+				// 	// System.out.println("fuck2 " + tile.x + " " + tile.y + " " + tile.black);
+				// 	if (tile.black) {
+				// 		tile.setReleased(true);
+				// 		milSecDelay = 0;
+				// 		combo += 1;
+				// 	}
+				// }
 			}
 		}
 		else{
@@ -465,28 +432,13 @@ public class DontTouchTheWhiteTile implements ActionListener, KeyListener
 					for (int i = 0; i < tiles.size(); i++) {
 						Tile tile = tiles.get(i);
 						// System.out.println(tile.pointInTile(x, y));
-						if (tile.pointInTile(x, y) && !tile.released) {
+						if (tile.pointInTile(x, y) && !tile.getReleased()) {
 							// System.out.println("fuck2 " + tile.x + " " + tile.y + " " + tile.black);
 							if (tile.black) {
-								if (tile.tileLength == 1) {
-									tile.setClicked(true);
-									tile.setReleased(true);
-									it.remove();
-									score += (100 + 10 * combo);
-									System.out.println("You've scored " + (100 + 10 * combo) + " points!");
-									milSecDelay = 0;
-									combo += 1;
-								} else {
-									if(!tile.clicked){
-										System.out.println("long tile in");
-										tile.setClicked(true);
-										tile.lastClickPos = y - tile.y;
-										System.out.println("long tile lastClickPos = " + tile.lastClickPos);
-									}
-									score += (10 + 10 * combo);
-									System.out.println("You've scored " + (10 + 10 * combo) + " points!");
-									milSecDelay = 0;
-								}
+								score += tile.handleScore(combo);
+								if (tile.handleTracking(x, y, it)) combo += 1;
+								// System.out.println("You've scored " + (100 + 10 * combo) + " points!");
+								milSecDelay = 0;
 							} else {
 								score -= 200;
 								it.remove();

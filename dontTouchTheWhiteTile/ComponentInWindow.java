@@ -28,7 +28,7 @@ public class ComponentInWindow extends JFrame {
     JComboBox<Object> comBox;
     JTextArea area;
     JPasswordField password;
-
+    JRadioButton aa;
     String userName;
     int column;
     String speed;
@@ -46,37 +46,17 @@ public class ComponentInWindow extends JFrame {
         setLayout(layout);
 
         add(new JLabel("Username: "));
-        text = new JTextField(10);
+        text = new JTextField(25);
         add(text);
 
-        add(new JLabel("Columns:"));
-        group1 = new ButtonGroup();
-        buttons[0] = new JRadioButton("3");
-        buttons[1] = new JRadioButton("4");
-        group1.add(buttons[0]);
-        group1.add(buttons[1]);
-        add(buttons[0]);
-        add(buttons[1]);
-
-        buttons[0].addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                column = Integer.parseInt(buttons[0].getText());
-            }
-        });
-        buttons[1].addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                column = Integer.parseInt(buttons[1].getText());
-            }
-        });
+        
 
         add(new JLabel("speed:"));
         group2 = new ButtonGroup();
         buttons[2] = new JRadioButton("slow");
         buttons[3] = new JRadioButton("fast");
         buttons[4] = new JRadioButton("super fast");
-        buttons[5] = new JRadioButton("hell");
+        buttons[5] = new JRadioButton("hell mode");
         group2.add(buttons[2]);
         group2.add(buttons[3]);
         group2.add(buttons[4]);
@@ -111,12 +91,34 @@ public class ComponentInWindow extends JFrame {
             }
         });
 
+        add(new JLabel("Columns:"));
+        group1 = new ButtonGroup();
+        buttons[0] = new JRadioButton("3");
+        buttons[1] = new JRadioButton("4");
+        group1.add(buttons[0]);
+        group1.add(buttons[1]);
+        add(buttons[0]);
+        add(buttons[1]);
+
+
+        buttons[0].addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                column = Integer.parseInt(buttons[0].getText());
+            }
+        });
+        buttons[1].addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                column = Integer.parseInt(buttons[1].getText());
+            }
+        });
+
         add(new JLabel("music:"));
         comBox = new JComboBox<>();
-        comBox.addItem("");
         comBox.addItem("Canon");
         comBox.addItem("Turkish March");
-        comBox.addItem("Für Elise");
+        comBox.addItem("Fur Elise");
         comBox.addItem("Ballade pour Adeline");
         add(comBox);
 
@@ -138,7 +140,7 @@ public class ComponentInWindow extends JFrame {
                     setVisible(false);
                     dispose();
                     dttwt = new DontTouchTheWhiteTile(userName, column, speed, songName);
-		            dttwt.music.run();
+                    dttwt.music.run();
                 }catch(Exception ex){
                     System.out.println(ex);
                 }

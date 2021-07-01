@@ -26,7 +26,7 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 
 	public final static int[] velocity = {30, 15, 5, 3};
 
-	public final static int[] keyCodeList = {83, 68, 70, 32, 74, 75, 76};
+	public int[] keyCodeList = {83, 68, 70, 32, 74, 75, 76};
 	public Map<Integer, Integer> keyCodeToX = new HashMap<Integer, Integer>();
 	
 	public static DontTouchTheWhiteTile dttwt;
@@ -81,13 +81,15 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 
 	public DontTouchTheWhiteTile(String username, int column, String speed, String songName)
 	{
-		if (username.equals("")) username = "None";
+		if (username == null) this.username = "player";
 		this.username = username;
-		if(column == 0) column = 3;
+		if (column == 0) column = 3;
 		this.COLUMNS = column;
 		this.song_Name = songName;
 		this.speed_String = speed;
-		if (speed.equals("slow")) {
+		if (speed == null) {
+			this.speed = velocity[0];
+		} else if (speed.equals("slow")) {
 			this.speed = velocity[0];
 		} else if (speed.equals("fast")) {
 			this.speed = velocity[1];
@@ -98,8 +100,13 @@ public class DontTouchTheWhiteTile implements ActionListener, MouseListener, Key
 		} else {
 			this.speed = velocity[0];
 		}
+		if (this.COLUMNS == 3) {
+			keyCodeList = new int[] {70, 32, 74};
+		} else if (this.COLUMNS == 4) {
+			keyCodeList = new int[] {68, 70, 74, 75};
+		}
 		for (int i = 0; i < COLUMNS; i++) {
-			keyCodeToX.put(keyCodeList[i + (int) ((7 - COLUMNS) / 2) ], (int) (TILE_WIDTH * (i+0.5)));
+			keyCodeToX.put(keyCodeList[i], (int) (TILE_WIDTH * (i+0.5)));
 		}
 		int nowTimer = musics[0].getTimerNumber();
 		Float nowSpeed = musics[0].getSpeed();
